@@ -1,6 +1,11 @@
 *.o
 hra*
 .dep.inc
+*.list
+*.log
 *.tmp
 *.temp
+*.zip
+temp/
 nbproject/
+doc/*
