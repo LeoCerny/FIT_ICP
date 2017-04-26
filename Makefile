@@ -49,14 +49,18 @@ test: clean dep test-start
 
 test-start: FLAGS=-std=c++11 -O3 -Wall -Wextra -Werror -pedantic-errors -pedantic
 
-test-start: TestCart TestColumnOfCart
+test-start: TestCart TestColumnOfCart TestPackage
 	./TestCart
 	./TestColumnOfCart
+	./TestPackage
 
 TestCart: $(TEST)TestCart.o $(SOURCE)Cart.o
 	$(CC) $^ -o $@
 
 TestColumnOfCart: $(TEST)TestColumnOfCart.o $(SOURCE)Cart.o $(SOURCE)ColumnOfCart.o
+	$(CC) $^ -o $@
+
+TestPackage: $(TEST)TestPackage.o $(SOURCE)Package.o $(SOURCE)Cart.o
 	$(CC) $^ -o $@
 
 # Universal rule
