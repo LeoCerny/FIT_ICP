@@ -5,6 +5,7 @@ FLAGS=-std=c++11 -w -O3
 OUTGUI = hra2017
 OUTCLI = hra2017-cli
 RM=rm -fr
+TEST = tests/
 ZIP=xcerny63-xcecho03.zip
 #-----------------------------------------
 
@@ -44,4 +45,27 @@ build: clean
 	python3 generator.py
 	@echo BUILD - END
 
-	
+test: clean dep test-start
+
+test-start: FLAGS=-std=c++11 -O3 -Wall -Wextra -Werror -pedantic-errors -pedantic
+
+test-start: TestCart TestColumnOfCart
+	./TestCart
+	./TestColumnOfCart
+
+TestCart: $(TEST)TestCart.o $(SOURCE)Cart.o
+	$(CC) $^ -o $@
+
+TestColumnOfCart: $(TEST)TestColumnOfCart.o $(SOURCE)Cart.o $(SOURCE)ColumnOfCart.o
+	$(CC) $^ -o $@
+
+# Universal rule
+$(SOURCE)%.o: $(SOURCE)%.cpp
+	$(CC) $(FLAGS) -c $< -o $@
+
+$(TEST)%.o: $(TEST)%.cpp
+	$(CC) $(FLAGS) -c $< -o $@
+
+dep:
+	$(CC) $(FLAGS) -MM $(SOURCE)*.cpp $(TEST)*.cpp >dep.list
+-include dep.list

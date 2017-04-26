@@ -10,22 +10,58 @@
 #define COLUMNOFCART_H
 
 #include <vector>
+#include <algorithm>
 #include "Cart.h"
 
 using namespace std;
 
 class ColumnOfCart {
 public:
-    ColumnOfCart();
-    void addCart(Cart *cart);
-    void rotate(int num);
-    Cart *getLastCart() { return this->getCart(this->carts.size() - 1); };
+
+    /**
+     * Pridá kartu do sloupce
+     * @param cart
+     */
+    void addCart(Cart *cart) {
+        this->carts.insert(this->carts.end(), cart);
+    }
+
+    Cart *getLastCart() {
+        return this->getCart(this->carts.size() - 1);
+    };
+    /**
+     * Vráti kartu na určité pozici
+     * 
+     * @param index
+     * @return Karta
+     */
     Cart *getCart(unsigned int index);
-    unsigned int size() { return this->carts.size(); }
+
+    /**
+     * Vráti poslední kartu ve sloupci a odebere ji
+     * 
+     * @return Posední karta
+     */
+    Cart *popLastCart() {
+        Cart *cart = this->getLastCart();
+        this->carts.pop_back();
+        return cart;
+    }
+
+    /**
+     * @return Počet karet
+     */
+    unsigned int size() {
+        return this->carts.size();
+    }
+    
+    void rotateOne() {
+        rotate(this->carts.begin(), this->carts.begin() + 1, this->carts.end());
+    }
 private:
     vector<Cart*> carts;
-    unsigned int index;
-    void rotateOne();
+
+    
 };
 
 #endif /* COLUMNOFCART_H */
