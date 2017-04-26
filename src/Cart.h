@@ -50,6 +50,20 @@ public:
         return this->number;
     };
 
+    string getNumberAsString() {
+        switch (this->number) {
+            case 1:
+                return "A";
+            case 11:
+                return "J";
+            case 12:
+                return "Q";
+            case 13:
+                return "K";
+            default: return to_string(this->number);
+        }
+    }
+
     /**
      * @return Typ karty
      */
@@ -60,13 +74,39 @@ public:
     /**
      * Otočí kartu lícem nahoru
      */
-    void show() { this->isHidden = 0; }
+    void show() {
+        this->isHidden = 0;
+    }
 
     /**
      * Otočí kartu rubem nahoru
      */
     void hide() {
         this->isHidden = 1;
+    }
+
+    /**
+     * Ověří zda může danou kartu položit na tuto
+     * 
+     * @param resultCol Jedná se o odkládací sloupec
+     * @return Úspěch operace
+     */
+    bool canPush(Cart *cart, bool resultCol = false) {
+        if (!((!resultCol and this->number == cart->getNumber() + 1) or (resultCol and this->number + 1 == cart->getNumber())))
+            return false;
+        switch (this->type) {
+            case Cart::HEART:
+            case Cart::SQUARE:
+                if (!((!resultCol and (cart->getType() == Cart::LETTER || cart->getType() == Cart::SPADES)) or (resultCol and this->type == cart->getType())))
+                    return false;
+                break;
+            case Cart::LETTER:
+            case Cart::SPADES:
+                if (!((!resultCol and (cart->getType() == Cart::HEART || cart->getType() == Cart::SQUARE)) or (resultCol and this->type == cart->getType())))
+                    return false;
+                break;
+        }
+        return true;
     }
 
     friend ostream& operator<<(std::ostream &strm, Cart *cart) {
@@ -80,7 +120,21 @@ public:
      * @return Textová reprezentace
      */
     string stringRepresentation() {
-        return (this->isHidden) ? "---" : to_string(this->number) + "-" + to_string(this->type);
+        string type;
+        switch (this->type) {
+            case Cart::HEART:
+                type = "\u2665";
+                break;
+            case Cart::LETTER:
+                type = "\u2660";
+                break;
+            case Cart::SPADES:
+                type = "\u2663";
+                break;
+            default:
+                type = "\u2666";
+        }
+        return (this->isHidden) ? "---" : this->getNumberAsString() + type;
     }
 private:
     int type;
