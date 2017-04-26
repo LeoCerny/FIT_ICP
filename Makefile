@@ -8,14 +8,15 @@ RM=rm -fr
 ZIP=xcerny63-xcecho03.zip
 #-----------------------------------------
 
-all: dep cli gui
+all: gui cli 
 
-cli: main-cli.o
-	$(CC) $(FLAGS) $^ -o $(OUTCLI)
+cli:
+	@cd $(SOURCE) && $(CC) $(FLAGS) main-cli.cpp Cart.o ColumnOfCart.o Package.o Game.o -o $(OUTCLI)
+	@mv $(SOURCE)$(OUTCLI) .
 
 gui:
 	@cd $(SOURCE) && qmake -o Makefile && make
-	@mv $(SOURCE)$(OUTGUI) $(OUTGUI)
+	@mv $(SOURCE)$(OUTGUI) .
 
 run:
 	@./$(OUTGUI)	 
@@ -25,7 +26,6 @@ zip: clean build
 
 unzip:
 	unzip $(ZIP) -d ./temp
-
 
 clean:
 	@$(RM) $(OUTCLI)
@@ -43,23 +43,5 @@ build: clean
 	cd $(SOURCE) && qmake -project -o $(OUTGUI).pro
 	python3 generator.py
 	@echo BUILD - END
-#-----------------------------------------
-
-# Universal rule
-%.o: $(SOURCE)%.cpp $(SOURCE)%.h
-	$(CC) $(FLAGS) -c $^ -o $(SOURCE)$@
-
-main-cli.o:
-	$(CC) $(FLAGS) -c $(SOURCE)main-cli.cpp -o $@
-
-dep:
-	$(CC) $(FLAGS) -MM $(SOURCE)*.cpp $(SOURCE)*.h >dep.list
--include dep.list
-#-----------------------------------------
-
-# TESTS
-test: clean build test-start 
-test-start: FLAGS=-std=c++11 -O3 -Wall -Wextra -Werror -pedantic-errors -pedantic
-test-start: all
 
 	

@@ -9,13 +9,23 @@
 #ifndef COLUMNOFCART_H
 #define COLUMNOFCART_H
 
+#include <vector>
+#include "Cart.h"
+
+using namespace std;
+
 class ColumnOfCart {
 public:
     ColumnOfCart();
-    ColumnOfCart(const ColumnOfCart& orig);
-    virtual ~ColumnOfCart();
+    void addCart(Cart *cart);
+    void rotate(int num);
+    Cart *getLastCart() { return this->getCart(this->carts.size() - 1); };
+    Cart *getCart(unsigned int index);
+    unsigned int size() { return this->carts.size(); }
 private:
-
+    vector<Cart*> carts;
+    unsigned int index;
+    void rotateOne();
 };
 
 #endif /* COLUMNOFCART_H */

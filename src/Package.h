@@ -9,7 +9,10 @@
 #ifndef PACKAGE_H
 #define PACKAGE_H
 
+#include <vector>
 #include "Cart.h"
+
+using namespace std;
 
 class Package {
 public:
@@ -26,12 +29,19 @@ public:
     
     /**
      * Vrátí kartu z vrcholu balíčku
+     * 
      * @return Poslední karta v poli karet
      */
     Cart *getCart();
     
+    /**
+     * Otestuje zda je balíček prázdný
+     * @return Úspěch
+     */
+    bool isEmpty() { return this->carts.empty(); }
+    
 private:
-    std::vector <Cart*> carts;
+    vector<Cart*> carts;
     
     /**
      * Vyhledá hodnotu v zadaném vektoru
@@ -40,7 +50,7 @@ private:
      * @param data
      * @return 
      */
-    bool inArray(int value, std::vector<int> data);
+    bool inArray(unsigned int value, std::vector<unsigned int> data);
 };
 
 #endif /* PACKAGE_H */
