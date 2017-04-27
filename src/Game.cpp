@@ -10,8 +10,8 @@
 
 #include <stdexcept>
 
-#include "Package.h"
 #include "Game.h"
+#include "Package.h"
 
 Game::Game(unsigned int countDeskCols) {
     this->countDeskCols = countDeskCols;
@@ -25,14 +25,12 @@ void Game::createGame() {
     Package *package = new Package();
     unsigned int i = 0;
     ColumnOfCart *col;
-    Cart *cart;
     while (i < this->countDeskCols) {
         col = new ColumnOfCart();
         for (unsigned int x = 0; x < i + 1; x++) {
-            cart = package->getCart();
-            col->addCart(cart);
+            col->addCart(package->getCart());
         }
-        cart->show();
+        col->getLastCart()->show();
         this->desk.insert(this->desk.end(), col);
         i++;
     }
@@ -40,9 +38,42 @@ void Game::createGame() {
     for (int i = 0; i < 4; i++) {
         this->results.insert(this->results.end(), new ColumnOfCart);
     }
-
     while (!package->isEmpty()) {
-        this->rotateColumn->addCart(package->getCart());
+        Cart *cart2 = package->getCart();
+        cart2->show();
+        this->rotateColumn->addCart(cart2);
+    }
+}
+
+bool Game::moveCarts(ColumnOfCart *src, ColumnOfCart *dest, unsigned int count, bool resultCol) {
+    unsigned int i;
+    ColumnOfCart *temp = new ColumnOfCart;
+    for (i = 0; i < count; i++) {
+        try {
+            if (src->getLastCart()->isHide()) break;
+            temp->addCart(src->popLastCart());
+        } catch (invalid_argument e) {
+        }
+    }
+
+    bool continueVar = false;
+    if (temp->size() != 0) {
+        continueVar = dest->canPush(temp->getLastCart(), resultCol);
+    }
+
+    i = temp->size();
+    if (continueVar == true) {
+        while (i > 0) {
+            i--;
+            dest->addCart(temp->popLastCart());
+        }
+        return true;
+    } else {
+        while (i > 0) {
+            i--;
+            src->addCart(temp->popLastCart());
+        }
+        return false;
     }
 }
 
@@ -69,6 +100,39 @@ ColumnOfCart *Game::getDeskColumn(unsigned int index) {
     if (this->desk.size() <= index)
         throw invalid_argument("Neexistují sloupec na hrací desce");
     return this->desk.at(index);
+}
+
+ColumnOfCart *Game::getResultColumn(unsigned int index) {
+    if (this->results.size() <= index)
+        throw invalid_argument("Neexistují odkládací sloupec");
+    return this->results.at(index);
+}
+
+bool Game::moveCartsOnDesk(unsigned int srcCol, unsigned int count, unsigned int destCol) {
+    ColumnOfCart *src = this->getDeskColumn(srcCol);
+    ColumnOfCart *dest = this->getDeskColumn(destCol);
+
+    if (this->moveCarts(src, dest, count)) {
+        try {
+            src->getLastCart()->show();
+        } catch (invalid_argument e) {
+
+        }
+        return true;
+    } else return false;
+}
+
+bool Game::moveCartsDeskToResult(unsigned int srcCol, unsigned int destCol) {
+    ColumnOfCart *src = this->getDeskColumn(srcCol);
+    ColumnOfCart *dest = this->getResultColumn(destCol);
+
+    if (this->moveCarts(src, dest, 1, true)) {
+        try {
+            src->getLastCart()->show();
+        } catch (invalid_argument e) {
+        }
+        return true;
+    } else return false;
 }
 
 void Game::save() {

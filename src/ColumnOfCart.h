@@ -54,14 +54,29 @@ public:
     unsigned int size() {
         return this->carts.size();
     }
-    
+
+    /**
+     * Provede rotaci sloupce
+     */
     void rotateOne() {
         rotate(this->carts.begin(), this->carts.begin() + 1, this->carts.end());
     }
+
+    bool canPush(Cart *cart, bool resultCol) {
+        if (this->size() == 0) {
+            if (resultCol)
+                return cart->getNumberAsString() == "A";
+            else
+                return cart->getNumberAsString() == "K";
+        } else {
+            return this->getLastCart()->canPush(cart, resultCol);
+        }
+    }
+
 private:
     vector<Cart*> carts;
 
-    
+
 };
 
 #endif /* COLUMNOFCART_H */

@@ -75,14 +75,21 @@ public:
      * Otočí kartu lícem nahoru
      */
     void show() {
-        this->isHidden = 0;
+        this->isHidden = false;
     }
 
     /**
      * Otočí kartu rubem nahoru
      */
     void hide() {
-        this->isHidden = 1;
+        this->isHidden = true;
+    }
+
+    /**
+     * @return Je rubem nahoře
+     */
+    bool isHide() {
+        return this->isHidden;
     }
 
     /**
@@ -114,6 +121,10 @@ public:
         return strm;
     }
 
+    bool operator==(Cart *cart) {
+        return (this->number == cart->getNumber() and this->type == cart->getType() and this->isHidden == cart->isHide());
+    }
+
     /**
      * Vratí textovou reprezetaci karty
      * 
@@ -139,7 +150,7 @@ public:
 private:
     int type;
     int number;
-    int isHidden;
+    bool isHidden;
 
 };
 

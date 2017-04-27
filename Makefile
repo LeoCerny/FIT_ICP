@@ -31,8 +31,8 @@ unzip:
 clean:
 	@$(RM) $(OUTCLI)
 	@$(RM) $(OUTGUI)
-	@$(RM) *.o *.log *.list
-	@$(RM) $(SOURCE)*.o
+	@$(RM) *.o *.log *.list TestCart TestColumnOfCart TestPackage TestGame
+	@$(RM) $(SOURCE)*.o $(TEST)*.o
 	@$(RM) $(ZIP)
 	@$(RM) doc/* temp/
 
@@ -49,10 +49,11 @@ test: clean dep test-start
 
 test-start: FLAGS=-std=c++11 -O3 -Wall -Wextra -Werror -pedantic-errors -pedantic
 
-test-start: TestCart TestColumnOfCart TestPackage
+test-start: TestCart TestColumnOfCart TestPackage TestGame
 	./TestCart
 	./TestColumnOfCart
 	./TestPackage
+	./TestGame
 
 TestCart: $(TEST)TestCart.o $(SOURCE)Cart.o
 	$(CC) $^ -o $@
@@ -61,6 +62,9 @@ TestColumnOfCart: $(TEST)TestColumnOfCart.o $(SOURCE)Cart.o $(SOURCE)ColumnOfCar
 	$(CC) $^ -o $@
 
 TestPackage: $(TEST)TestPackage.o $(SOURCE)Package.o $(SOURCE)Cart.o
+	$(CC) $^ -o $@
+
+TestGame: $(TEST)TestGame.o $(SOURCE)Game.o $(SOURCE)Package.o $(SOURCE)Cart.o $(SOURCE)ColumnOfCart.o
 	$(CC) $^ -o $@
 
 # Universal rule

@@ -1,8 +1,8 @@
-/* 
- * File:   TestColumnOfCart.cpp
- * Author: leo
- *
- * Created on April 26, 2017, 11:10 PM
+/** 
+ * @file TestColumnOfCart.cpp
+ * @author Lukáš Černý <xcerny63@stud.fit.vutbr.cz>
+ * 
+ * @date April 26, 2017, 11:10 PM
  */
 
 #include <stdlib.h>

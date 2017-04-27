@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <regex>
 #include "Game.h"
 #include "Package.h"
 
@@ -28,9 +29,7 @@ void printHelp() {
     cout << "\t\t 2 -> S3  Vezme kartu ze sloupce na hraci desce a odlozi ho na odkladaci sloupec" << endl;
     cout << "\t Z odkladaciho balicku na hraci sloupec" << endl;
     cout << "\t\t S2 -> 3  Vezme kartu z 2. odkladaciho balicku a vlozi ji na 3. hraci sloupec" << endl;
-    
-          
-            
+    cout << "\trotate - provede rotaci balicku" << endl;
 }
 
 void printGame(Game *game) {
@@ -63,27 +62,62 @@ void printGame(Game *game) {
     }
 }
 
-bool handleInput(Game *game, string inputData)  {
-    //source
-    unsigned int row;
-    unsigned int col;
-    
+bool parseInput(Game *game, string input) {
+    smatch match;
+    bool error = false;
+    regex expr1("^([1-9])-([1-9][0-9]{0,2})->([1-9])$");
+    regex expr2("^R->([1-9])$");
+    regex expr3("^R->S([1-4])$");
+    regex expr4("^([1-9])->S([1-4])$");
+    regex expr5("^S([1-4])->([1-9])$");
+
+    if (regex_match(input, expr1)) {
+        regex_search(input, match, expr1);
+        if (!game->moveCartsOnDesk((unsigned int) stoul(match[1]) - 1, (unsigned int) stoul(match[2]), (unsigned int) stoul(match[3]) - 1))
+            cout << endl << "CHYBA: Nepovolený tah" << endl;
+    } else if (regex_match(input, expr2)) {
+        regex_search(input, match, expr2);
+        if (!game->moveCartsRotateToDesk((unsigned int) stoul(match[1]) - 1))
+            cout << endl << "CHYBA: Nepovolený tah" << endl;
+    } else if (regex_match(input, expr3)) {
+        regex_search(input, match, expr3);
+        if (!game->moveCartsRotateToResult((unsigned int) stoul(match[1]) - 1))
+            cout << endl << "CHYBA: Nepovolený tah" << endl;
+    } else if (regex_match(input, expr4)) {
+        regex_search(input, match, expr4);
+        if (!game->moveCartsDeskToResult((unsigned int) stoul(match[1]) - 1, (unsigned int) stoul(match[2]) - 1))
+            cout << endl << "CHYBA: Nepovolený tah" << endl;
+    } else if (regex_match(input, expr5)) {
+        regex_search(input, match, expr5);
+    } else return false;
+    return true;
+}
+
+bool handleInput(Game *game, string inputData) {
+    if (inputData == "help") {
+        printHelp();
+    } else if (inputData == "rotate") {
+        game->rotate();
+    } else
+        return parseInput(game, inputData);
 }
 
 int main() {
     // pro generování zcela náhodných čísel
     srand(time(NULL));
-    
+
     // vstup od uživatele
     string inputData;
     try {
-        Game *game = new Game(6);
+        Game *game = new Game(7);
         printHelp();
-        while(!game->isEnd()) {
+        while (!game->isEnd()) {
             printGame(game);
             inputData.clear();
             cin >> inputData;
-            handleInput(game, inputData);
+            if (handleInput(game, inputData)) {
+                cout << "povolene" << endl;
+            } else cout << "no" << endl;
         }
     } catch (exception e) {
         return 1;

@@ -11,6 +11,7 @@
 #include <cstdlib>
 
 #include "Package.h"
+#include "Cart.h"
 
 Package::Package() {
     this->generateCards();
@@ -18,7 +19,6 @@ Package::Package() {
 }
 
 void Package::generateCards() {
-    //this->carts.erase(this->carts.begin());
     for (int i = 1; i <= 13; i++) {
         this->carts.insert(this->carts.end(), new Cart(Cart::HEART, i));
         this->carts.insert(this->carts.end(), new Cart(Cart::SPADES, i));
