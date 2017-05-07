@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     // initialize resources, if needed
     // Q_INIT_RESOURCE(resfile);
 
-    QApplication app(argc, argv);
+    QApplication a(argc, argv);
     MainWindow w;
     w.show();
 
