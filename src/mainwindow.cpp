@@ -1,14 +1,20 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "ColumnOfButton.h"
+#include "Cart.h"
+
+#include <iostream>
 //#include "GameBoard.h"
 
-//globalni promenna
+
+
 
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
     /*GameBoard *gameBoard = new GameBoard(0,0);
     gameBoard->setPossition(0,0);
@@ -29,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //generovnai karet pro herni sloupce
     for (unsigned int x = 0; x < game->getCoutDeskCols(); x++){
+        ColumnOfButton *buttons = new ColumnOfButton;
         ColumnOfCart *col = game->getDeskColumn(x);
         for (unsigned int y = 0; y < col->size(); y++){
             QPushButton* card = new QPushButton(this);
@@ -42,12 +49,13 @@ MainWindow::MainWindow(QWidget *parent) :
             connect(card, SIGNAL(clicked()), cardMapper, SLOT(map()));
 
             //ulozeni tlacitka do vectoru
-            CardsBoard.push_back(card);
-
+            buttons->push(card);
         }
+        CardsBoard.insert(CardsBoard.end(), buttons);
     }
     //generovani karet pro top 4 sloupce
     for (unsigned int x = 0; x < 4; x++){
+        ColumnOfButton *buttons = new ColumnOfButton;
         ColumnOfCart  *col = game->getResultColumn(x);
         unsigned int size = col->size();
         QPushButton* card = new QPushButton(this);
@@ -61,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
         connect(card, SIGNAL(clicked()), cardMapper, SLOT(map()));
 
         //ulozeni tlacitka do vectoru
-        CardsTop.push_back(card);
+        buttons->push(card);
         for (unsigned int y = 0; y < size; y++){
             QPushButton* card = new QPushButton(this);
 
@@ -74,9 +82,10 @@ MainWindow::MainWindow(QWidget *parent) :
             connect(card, SIGNAL(clicked()), cardMapper, SLOT(map()));
 
             //ulozeni tlacitka do vectoru            
-            CardsTop.push_back(card);
+            buttons->push(card);
 
         }
+        CardsTop.insert(CardsTop.end(), buttons);
     }
     //generovani karet pro balicek
     for (unsigned int y = 0; y < game->getRotateColumn()->size(); y++){
@@ -93,7 +102,7 @@ MainWindow::MainWindow(QWidget *parent) :
         //ulozeni tlacitka do vectoru
         CardsDeck.push_back(card);
     }
-    //this->drawGame();
+    drawGame();
 //*/
 }
 
@@ -111,7 +120,7 @@ void MainWindow::drawGame() {
 
     QPixmap cardBack(":/cards/img/Rub.jpg");
     QIcon ButtonIconBack(cardBack);
-
+    string karta;
 
     //generace karet pro herni sloupce na desce
     for (unsigned int x = 0; x < game->getCoutDeskCols(); x++){
@@ -125,11 +134,32 @@ void MainWindow::drawGame() {
 
             //Prirazeni obrazku karty + rub, nastaveni viditelnosti
             if (cardHidden == true){
-                CardsBoard[x * col->size() + y]->setIcon(ButtonIconBack);
-                CardsBoard[x * col->size() + y]->setIconSize(cardBack.rect().size());
+                CardsBoard.at(x)->getByIndex(y)->setIcon(ButtonIconBack);
+                CardsBoard.at(x)->getByIndex(y)->setIconSize(cardBack.rect().size());
+                //CardsBoard[x * col->size() + y]->setIcon(ButtonIconBack);
+                //CardsBoard[x * col->size() + y]->setIconSize(cardBack.rect().size());
+            }
+            else {
+                switch (cardType) {
+                    case Cart::HEART:
+                        karta = ":/cards/img/Hearts/"+std::to_string(cardValue) +".jpg";
+                        break;
+                    case Cart::SPADES:
+                        karta = ":/cards/img/Spades/"+std::to_string(cardValue) +".jpg";
+                        break;
+                    case Cart::SQUARE:
+                        karta = ":/cards/img/Diamonds/"+std::to_string(cardValue) +".jpg";
+                        break;
+                    case Cart::LETTER:
+                        karta = ":/cards/img/Crosses/"+std::to_string(cardValue) +".jpg";
+                        break;
+                }
+                QPixmap card(karta.c_str());
+                QIcon BIC(card);
+                CardsBoard.at(x)->getByIndex(y)->setIcon(BIC);
+                CardsBoard.at(x)->getByIndex(y)->setIconSize(card.rect().size());
             }
 
-            //vykresleni karty na desku
 
 
 

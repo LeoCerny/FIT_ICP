@@ -13,7 +13,8 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += Cart.h ColumnOfCart.h Game.h mainwindow.h Package.h
+HEADERS += Cart.h ColumnOfCart.h Game.h mainwindow.h Package.h \
+    ColumnOfButton.h
 FORMS += mainwindow.ui
 SOURCES += Cart.cpp \
            ColumnOfCart.cpp \
@@ -21,5 +22,6 @@ SOURCES += Cart.cpp \
            \
            main.cpp \
            mainwindow.cpp \
-           Package.cpp
+           Package.cpp \
+    ColumnOfButton.cpp
 RESOURCES += resources.qrc

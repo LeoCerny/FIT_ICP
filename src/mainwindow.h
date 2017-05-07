@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "Game.h"
+#include "ColumnOfButton.h"
 
 #include <QMainWindow>
 #include <QWidget>
@@ -20,9 +21,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    vector <QPushButton*> CardsBoard;
+    vector <ColumnOfButton*> CardsBoard;
     vector <QPushButton*> CardsDeck;
-    vector <QPushButton*> CardsTop;
+    vector <ColumnOfButton*> CardsTop;
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void drawGame();
@@ -33,6 +34,7 @@ private slots:
     void on_actionUndo_triggered();
 
 private:
+
     Ui::MainWindow *ui;
     QSignalMapper* cardMapper = nullptr;
     Game *game;
