@@ -40,7 +40,6 @@ void Game::createGame() {
     }
     while (!package->isEmpty()) {
         Cart *cart2 = package->getCart();
-        cart2->show();
         this->rotateColumn->addCart(cart2);
     }
 }

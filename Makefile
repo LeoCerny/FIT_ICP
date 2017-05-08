@@ -9,13 +9,17 @@ TEST = tests/
 ZIP=xcerny63-xcecho03.zip
 #-----------------------------------------
 
-all: gui cli 
+all: gui _cli 
 
-cli:
-	@cd $(SOURCE) && $(CC) $(FLAGS) main-cli.cpp Cart.o ColumnOfCart.o Package.o Game.o -o $(OUTCLI)
-	@mv $(SOURCE)$(OUTCLI) .
+cli: dep _cli
+	
+gui: _gui	
+	
+_cli_start: dep _cli
+_cli: $(SOURCE)Cart.o $(SOURCE)ColumnOfCart.o $(SOURCE)Package.o $(SOURCE)Game.o $(SOURCE)main-cli.cpp
+	$(CC) $(FLAGS) $^ -o $(OUTCLI)
 
-gui:
+_gui:
 	@cd $(SOURCE) && qmake -o Makefile && make
 	@mv $(SOURCE)$(OUTGUI) .
 
