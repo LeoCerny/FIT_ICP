@@ -14,8 +14,11 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
+    //nastaveni okna
     ui->setupUi(this);
+    this->setFixedSize(591,700);
+    //this->setStyleSheet("background-color: green;");
+
     /*GameBoard *gameBoard = new GameBoard(0,0);
     gameBoard->setPossition(0,0);
     gameBoard->initBoard();*/
@@ -37,12 +40,25 @@ MainWindow::MainWindow(QWidget *parent) :
     for (unsigned int x = 0; x < game->getCoutDeskCols(); x++){
         ColumnOfButton *buttons = new ColumnOfButton;
         ColumnOfCart *col = game->getDeskColumn(x);
-        for (unsigned int y = 0; y < col->size(); y++){
+
+        //Nataveni rozmeru tlacitka pro zacatek sloupce
+        QPushButton* card = new QPushButton(this);
+        card->setFixedSize(cardSize);
+        card->move(10+x*83,270);
+        card->setFlat(true);
+
+        //mapovani tlacitka se signalem
+        cardMapper->setMapping(card, card);
+        connect(card, SIGNAL(clicked()), cardMapper, SLOT(map()));
+
+        //ulozeni tlacitka do vectoru
+        buttons->push(card);
+        for (unsigned int y = 1; y < col->size()+1; y++){
             QPushButton* card = new QPushButton(this);
 
             //Nataveni rozmeru tlacitka            
             card->setFixedSize(cardSize);
-            card->move(10+x*83,270+y*20);
+            card->move(10+x*83,270+(y-1)*20);
 
             //mapovani tlacitka se signalem
             cardMapper->setMapping(card, card);
@@ -58,9 +74,9 @@ MainWindow::MainWindow(QWidget *parent) :
         ColumnOfButton *buttons = new ColumnOfButton;
         ColumnOfCart  *col = game->getResultColumn(x);
         unsigned int size = col->size();
-        QPushButton* card = new QPushButton(this);
 
         //Nataveni rozmeru tlacitka
+        QPushButton* card = new QPushButton(this);
         card->setFixedSize(cardSize);
         card->move(259+x*83,70);
 
@@ -88,7 +104,7 @@ MainWindow::MainWindow(QWidget *parent) :
         CardsTop.insert(CardsTop.end(), buttons);
     }
     //generovani karet pro balicek
-    for (unsigned int y = 0; y < game->getRotateColumn()->size(); y++){
+    for (unsigned int y = 0; y < game->getRotateColumn()->size() +1; y++){
         QPushButton* card = new QPushButton(this);
 
         //Nataveni rozmeru tlacitka        
@@ -125,19 +141,17 @@ void MainWindow::drawGame() {
     //generace karet pro herni sloupce na desce
     for (unsigned int x = 0; x < game->getCoutDeskCols(); x++){
         ColumnOfCart  *col = game->getDeskColumn(x);
-        for (unsigned int y = 0; y < col->size(); y++){
+        for (unsigned int y = 1; y < col->size()+1; y++){
 
             //zjisteni attributu karty
-            cardType = game->getCart(x,y)->getType();
-            cardValue = game->getCart(x,y)->getNumber();
-            cardHidden = game->getCart(x,y)->isHide();
+            cardType = game->getCart(x,y-1)->getType();
+            cardValue = game->getCart(x,y-1)->getNumber();
+            cardHidden = game->getCart(x,y-1)->isHide();
 
             //Prirazeni obrazku karty + rub, nastaveni viditelnosti
             if (cardHidden == true){
                 CardsBoard.at(x)->getByIndex(y)->setIcon(ButtonIconBack);
                 CardsBoard.at(x)->getByIndex(y)->setIconSize(cardBack.rect().size());
-                //CardsBoard[x * col->size() + y]->setIcon(ButtonIconBack);
-                //CardsBoard[x * col->size() + y]->setIconSize(cardBack.rect().size());
             }
             else {
                 switch (cardType) {
@@ -159,38 +173,54 @@ void MainWindow::drawGame() {
                 CardsBoard.at(x)->getByIndex(y)->setIcon(BIC);
                 CardsBoard.at(x)->getByIndex(y)->setIconSize(card.rect().size());
             }
-
-
-
-
         }
     }
     //generovani karet pro top 4 sloupce
-    /*for (unsigned int x = 1; x < 4 +1; x++){
-        for (unsigned int y = 1; y < velikostsloupce +1; y++){
+    for (unsigned int x = 0; x < 4; x++){
+        for (unsigned int y = 1; y < game->getResultColumn(x)->size() +1; y++){
 
-
+            //zjisteni attributu karty (y-1) protoze prvni kartou je prazdne tlacitko
+            cardType = game->getResultColumn(x)->getCart(y-1)->getType();
+            cardValue = game->getResultColumn(x)->getCart(y-1)->getNumber();
+            cardHidden = game->getResultColumn(x)->getCart(y-1)->isHide();
             //Prirazeni obrazku karty + rub, nastaveni viditelnosti
-
-
-            //vykresleni karty na desku
-
+            if (cardHidden == true){
+                CardsTop.at(x)->getByIndex(y)->setIcon(ButtonIconBack);
+                CardsTop.at(x)->getByIndex(y)->setIconSize(cardBack.rect().size());
+            }
+            else {
+                switch (cardType) {
+                    case Cart::HEART:
+                        karta = ":/cards/img/Hearts/"+std::to_string(cardValue) +".jpg";
+                        break;
+                    case Cart::SPADES:
+                        karta = ":/cards/img/Spades/"+std::to_string(cardValue) +".jpg";
+                        break;
+                    case Cart::SQUARE:
+                        karta = ":/cards/img/Diamonds/"+std::to_string(cardValue) +".jpg";
+                        break;
+                    case Cart::LETTER:
+                        karta = ":/cards/img/Crosses/"+std::to_string(cardValue) +".jpg";
+                        break;
+                }
+                QPixmap card(karta.c_str());
+                QIcon BIC(card);
+                CardsTop.at(x)->getByIndex(y)->setIcon(BIC);
+                CardsTop.at(x)->getByIndex(y)->setIconSize(card.rect().size());
         }
-    }*/
+    }
     //generovani karet pro balicek
-    for (unsigned int x = 0; x < game->getRotateColumn()->size(); x++){
+    for (unsigned int x = 1; x < game->getRotateColumn()->size() + 1; x++){
 
         //zjisteni attributu karty
-        cardType = game->getRotateColumn()->getCart(x)->getType();
-        cardValue = game->getRotateColumn()->getCart(x)->getNumber();
-        cardHidden = game->getRotateColumn()->getCart(x)->isHide();
+        cardType = game->getRotateColumn()->getCart(x-1)->getType();
+        cardValue = game->getRotateColumn()->getCart(x-1)->getNumber();
+        cardHidden = game->getRotateColumn()->getCart(x-1)->isHide();
 
         //Prirazeni obrazku karty + rub, nastaveni viditelnosti
         if (cardHidden == true){
             CardsDeck[x]->setIcon(ButtonIconBack);
             CardsDeck[x]->setIconSize(cardBack.rect().size());
-            //CardsBoard[x * col->size() + y]->setIcon(ButtonIconBack);
-            //CardsBoard[x * col->size() + y]->setIconSize(cardBack.rect().size());
         }
         else {
             switch (cardType) {
@@ -212,8 +242,8 @@ void MainWindow::drawGame() {
             CardsDeck[x]->setIcon(ButtonIconBack);
             CardsDeck[x]->setIconSize(cardBack.rect().size());
         }
-
     }
+}
   /*  //generovani karet pro odkladaci balicek
     for (unsigned int y = 1; y < pile +1; y++){
 
@@ -255,8 +285,7 @@ void MainWindow::on_Deck_clicked()
     QPixmap pixmap("C:/Users/Ondra/Documents/Skola/ICP/Projekt/img/Hearts/HA.jpg");
     QIcon ButtonIcon(pixmap);
     //ui->Pile->setIcon(ButtonIcon);
-    //ui->Pile->setIconSize(pixmap.rect().size());
-    this->drawGame();
+    //ui->Pile->setIconSize(pixmap.rect().size());    
 }
 
 void MainWindow::on_actionUndo_triggered()
