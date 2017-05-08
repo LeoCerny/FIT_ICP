@@ -13,9 +13,11 @@
 
 using namespace std;
 
-Cart *ColumnOfCart::getCart(unsigned int index) {
-    if (this->carts.empty() || this->carts.size() <= index )
+Cart *ColumnOfCart::getCart(unsigned int index, bool right) {
+    if ((right == false && (this->cartsLeft.empty() || this->cartsLeft.size() <= index)) || (right && (this->cartsRight.empty() || this->cartsRight.size() <= index)))
         throw invalid_argument("Prazdný sloupec");
-    return this->carts.at(index);
+    if (right)
+        return this->cartsRight.at(index);
+    return this->cartsLeft.at(index);
 }
 
