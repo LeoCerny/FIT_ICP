@@ -17,17 +17,18 @@ HEADERS += Cart.h \
            ColumnOfButton.h \
            ColumnOfCart.h \
            Game.h \
-           GameBoard.h \
            mainwindow.h \
-           Package.h
-FORMS += mainwindow.ui
+           Package.h \
+    largewindow.h
+FORMS += mainwindow.ui \
+    largewindow.ui
 SOURCES += Cart.cpp \
            ColumnOfButton.cpp \
            ColumnOfCart.cpp \
            Game.cpp \
-           GameBoard.cpp \
            \
            main.cpp \
            mainwindow.cpp \
-           Package.cpp
+           Package.cpp \
+    largewindow.cpp
 RESOURCES += resources.qrc

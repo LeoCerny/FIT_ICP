@@ -1,42 +1,12 @@
-#include "GameBoard.h"
+#include "largewindow.h"
+#include "ui_largewindow.h"
 
-void GameBoard::drawGame() {
-
-    int cardType;
-    int cardValue;
-    bool cardHidden;
-
-    QPixmap cardBack(":/cards/img/Rub.jpg");
-    QIcon ButtonIconBack(cardBack);
-
-
-    //generace karet pro herni sloupce na desce
-    for (unsigned int x = 0; x < game->getCoutDeskCols(); x++){
-        ColumnOfCart  *col = game->getDeskColumn(x);
-        for (unsigned int y = 0; y < col->size(); y++){
-
-            //zjisteni attributu karty
-            cardType = game->getCart(x,y)->getType();
-            cardValue = game->getCart(x,y)->getNumber();
-            cardHidden = game->getCart(x,y)->isHide();
-
-            //Prirazeni obrazku karty + rub, nastaveni viditelnosti
-            if (cardHidden == true){
-                CardsBoard[x * col->size() + y]->setIcon(ButtonIconBack);
-                CardsBoard[x * col->size() + y]->setIconSize(cardBack.rect().size());
-            }
-
-            //vykresleni karty na desku
-
-
-
-        }
-    }
-}
-
-void GameBoard::initBoard()
+largeWindow::largeWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::largeWindow)
 {
     ui->setupUi(this);
+    game = new Game(7);
 
     QPixmap pixmap(":/cards/img/Rub.jpg");
     QIcon ButtonIcon(pixmap);
@@ -116,5 +86,43 @@ void GameBoard::initBoard()
         CardsDeck.push_back(card);
     }
     //this->drawGame();
+}
 
+largeWindow::~largeWindow()
+{
+    delete ui;
+}
+
+void largeWindow::drawGame() {
+
+    int cardType;
+    int cardValue;
+    bool cardHidden;
+
+    QPixmap cardBack(":/cards/img/Rub.jpg");
+    QIcon ButtonIconBack(cardBack);
+
+
+    //generace karet pro herni sloupce na desce
+    for (unsigned int x = 0; x < game->getCoutDeskCols(); x++){
+        ColumnOfCart  *col = game->getDeskColumn(x);
+        for (unsigned int y = 0; y < col->size(); y++){
+
+            //zjisteni attributu karty
+            cardType = game->getCart(x,y)->getType();
+            cardValue = game->getCart(x,y)->getNumber();
+            cardHidden = game->getCart(x,y)->isHide();
+
+            //Prirazeni obrazku karty + rub, nastaveni viditelnosti
+            if (cardHidden == true){
+                CardsBoard[x * col->size() + y]->setIcon(ButtonIconBack);
+                CardsBoard[x * col->size() + y]->setIconSize(cardBack.rect().size());
+            }
+
+            //vykresleni karty na desku
+
+
+
+        }
+    }
 }

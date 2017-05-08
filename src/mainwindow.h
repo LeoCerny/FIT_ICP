@@ -28,12 +28,15 @@ public:
     ~MainWindow();
     void drawGame();
 
+public slots:
+    void On_Clicked(int index);
+
 private slots:
     void on_Deck_clicked();
 
     void on_actionUndo_triggered();
 
-    void On_Clicked(int index);
+
 
 private:
 

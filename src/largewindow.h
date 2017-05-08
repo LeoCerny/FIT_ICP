@@ -1,5 +1,5 @@
-#ifndef GAMEBOARD_H
-#define GAMEBOARD_H
+#ifndef LARGEWINDOW_H
+#define LARGEWINDOW_H
 
 #include "Game.h"
 
@@ -10,18 +10,19 @@
 #include <vector>
 #include <QPushButton>
 #include <QSignalMapper>
+#include <QMessageBox>
 
-class GameBoard
+namespace Ui {
+class largeWindow;
+}
+
+class largeWindow : public QMainWindow
 {
+    Q_OBJECT
+
 public:
-    vector <QPushButton*> CardsBoard;
-    vector <QPushButton*> CardsDeck;
-    vector <QPushButton*> CardsTop;
-    GameBoard(QWidget *parent):
-        QMainWindow(parent),
-        ui(new Ui::MainWindow) {
-        game = new Game(7);
-    }
+    explicit largeWindow(QWidget *parent = 0);
+    ~largeWindow();
 
     void setPossition(unsigned int x, unsigned int y) {
         this->x = x;
@@ -35,24 +36,17 @@ public:
         return y;
     }
 
-    int getX(const int x) {
-
-        return x * 80;
-    }
-
-
-    int getY(const int y) {
-
-        return y * 20;
-    }
     void drawGame();
-    void initBoard(QWidget *parent);
+
 private:
+    Ui::largeWindow *ui;
     unsigned int x;
     unsigned int y;
     Game *game;
-    Ui::MainWindow *ui;
     QSignalMapper* cardMapper = nullptr;
+    vector <QPushButton*> CardsBoard;
+    vector <QPushButton*> CardsDeck;
+    vector <QPushButton*> CardsTop;
 };
 
-#endif // GAMEBOARD_H
+#endif // LARGEWINDOW_H
