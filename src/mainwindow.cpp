@@ -112,8 +112,9 @@ MainWindow::MainWindow(QWidget *parent) :
         CardsTop.insert(CardsTop.end(), buttons);
     }
     //generovani karet pro balicek
+    cardCounter = cardMultiplier*11;
     for (unsigned int y = 0; y < game->getRotateColumn()->size() +1; y++){
-        cardCounter = cardMultiplier*11;
+
         QPushButton* card = new QPushButton(this);
 
         //Nataveni rozmeru tlacitka        
@@ -217,6 +218,7 @@ void MainWindow::drawGame() {
                 QIcon BIC(card);
                 CardsTop.at(x)->getByIndex(y)->setIcon(BIC);
                 CardsTop.at(x)->getByIndex(y)->setIconSize(card.rect().size());
+            }
         }
     }
     //generovani karet pro balicek
@@ -254,19 +256,6 @@ void MainWindow::drawGame() {
         }
     }
 }
-  /*  //generovani karet pro odkladaci balicek
-    for (unsigned int y = 1; y < pile +1; y++){
-
-
-
-        //Prirazeni obrazku karty + rub, nastaveni viditelnosti
-
-
-        //vykresleni karty na desku
-
-    }*/
-
-}
 
 int getX(const int x) {
 
@@ -283,15 +272,24 @@ void MainWindow::On_Clicked(int index){
 
     QMessageBox mess;
     string text;
+    //int backupIndex = index;
     unsigned int col = 0;
     while (index >= 100) {
         index -= 100;
         col++;
     }
 
-    text = "Zmackli jste kartu na sloupci " + to_string(col) + " cislo " + to_string(index);
-    mess.setText(text.c_str());
-    mess.exec();
+    //podminka, ktera opravuje index v ramci ulozeni karet bez prazdneho tlacitka navic
+    if(index > 0){
+        index--;
+
+        text = "Zmackli jste kartu na sloupci " + to_string(col) + " cislo " + to_string(index);
+        mess.setText(text.c_str());
+        mess.exec();
+    }else {
+        // zde bude cast kodu, ktera osetruje stlaceni na praznde tlacitko ve sloupci
+    }
+
 }
 
 void MainWindow::on_Deck_clicked()
