@@ -93,39 +93,48 @@ void testRotate() {
     col->addCart(new Cart(Cart::SPADES, 11));
 
     Cart *cart = col->getLastCart();
-    if (col->size() != 6 or cart->getNumber() != 11 or cart->getType() != Cart::SPADES)
-        cout << "FAIL1 rotateOne()" << endl;
+    if (col->size() != 6 or cart->getNumber() != 11 or cart->getType() != Cart::SPADES or !cart->isHide())
+        cout << "FAIL noRotate" << endl;
 
     col->rotateOne();
-    cart = col->getLastCart();
-    if (col->size() != 6 or cart->getNumber() != 1 or cart->getType() != Cart::HEART)
+    cart = col->getLastCart(true);
+    if (col->size() != 5 or cart->getNumber() != 11 or cart->getType() != Cart::SPADES or cart->isHide())
         cout << "FAIL2 rotateOne()" << endl;
 
     col->rotateOne();
-    cart = col->getLastCart();
-    if (col->size() != 6 or cart->getNumber() != 2 or cart->getType() != Cart::HEART)
+    cart = col->getLastCart(true);
+    if (col->size() != 4 or cart->getNumber() != 2 or cart->getType() != Cart::SPADES or cart->isHide())
         cout << "FAIL3 rotateOne()" << endl;
+    
     col->rotateOne();
-    cart = col->getLastCart();
-    if (col->size() != 6 or cart->getNumber() != 3 or cart->getType() != Cart::HEART)
+    cart = col->getLastCart(true);
+    if (col->size() != 3 or cart->getNumber() != 1 or cart->getType() != Cart::SPADES or cart->isHide())
         cout << "FAIL4 rotateOne()" << endl;
+    
     col->rotateOne();
-    cart = col->getLastCart();
-    if (col->size() != 6 or cart->getNumber() != 1 or cart->getType() != Cart::SPADES)
+    cart = col->getLastCart(true);
+    if (col->size() != 2 or cart->getNumber() != 3 or cart->getType() != Cart::HEART or cart->isHide())
         cout << "FAIL5 rotateOne()" << endl;
+    
     col->rotateOne();
-    cart = col->getLastCart();
-    if (col->size() != 6 or cart->getNumber() != 2 or cart->getType() != Cart::SPADES)
+    cart = col->getLastCart(true);
+    //cout << cart
+    if (col->size() != 1 or cart->getNumber() != 2 or cart->getType() != Cart::HEART or cart->isHide())
         cout << "FAIL6 rotateOne()" << endl;
+    
+    col->rotateOne();
+    cart = col->getLastCart(true);
+    if (col->size() != 0 or cart->getNumber() != 1 or cart->getType() != Cart::HEART or cart->isHide())
+        cout << "FAIL7 rotateOne()" << endl;
+    
     col->rotateOne();
     cart = col->getLastCart();
-    if (col->size() != 6 or cart->getNumber() != 11 or cart->getType() != Cart::SPADES)
-        cout << "FAIL7 rotateOne()" << endl;
-    cart = col->popLastCart();
-    if (col->size() != 5 or cart->getNumber() != 11 or cart->getType() != Cart::SPADES)
-        cout << "FAIL pop" << endl;
-    cart = col->getLastCart();
-    if (col->size() != 5 or cart->getNumber() != 2 or cart->getType() != Cart::SPADES)
+    if (col->size() != 6 or cart->getNumber() != 11 or cart->getType() != Cart::SPADES or !cart->isHide())
+        cout << "FAIL all cards on the left" << endl;
+    
+    col->rotateOne();
+    cart = col->getLastCart(true);
+    if (col->size() != 5 or cart->getNumber() != 11 or cart->getType() != Cart::SPADES or cart->isHide())
         cout << "FAIL getLast" << endl;
 }
 

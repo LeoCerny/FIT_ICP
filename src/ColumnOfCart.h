@@ -22,12 +22,23 @@ public:
      * Pridá kartu do sloupce
      * @param cart
      */
-    void addCart(Cart *cart) {
-        this->carts.insert(this->carts.end(), cart);
+    void addCart(Cart *cart, bool right = false) {
+        if (right)
+            this->cartsRight.insert(this->cartsRight.end(), cart);
+        else
+            this->cartsLeft.insert(this->cartsLeft.end(), cart);
     }
 
-    Cart *getLastCart() {
-        return this->getCart(this->carts.size() - 1);
+    /**
+     * Vráti poslední kartu v levem nebo pravem baličku
+     * 
+     * @param right
+     * @return Poslední karta
+     */
+    Cart *getLastCart(bool right = false) {
+        if (right)
+            return this->getCart(this->cartsRight.size() - 1, true);
+        return this->getCart(this->cartsLeft.size() - 1);
     };
     /**
      * Vráti kartu na určité pozici
@@ -35,31 +46,49 @@ public:
      * @param index
      * @return Karta
      */
-    Cart *getCart(unsigned int index);
+    Cart *getCart(unsigned int index, bool right = false);
 
     /**
      * Vráti poslední kartu ve sloupci a odebere ji
      * 
      * @return Posední karta
      */
-    Cart *popLastCart() {
-        Cart *cart = this->getLastCart();
-        this->carts.pop_back();
+    Cart *popLastCart(bool right = false) {
+        Cart *cart;
+        if (right) {
+            cart = this->getLastCart(true);
+            this->cartsRight.pop_back();
+        } else {
+            cart = this->getLastCart();
+            this->cartsLeft.pop_back();
+        }
         return cart;
     }
 
     /**
      * @return Počet karet
      */
-    unsigned int size() {
-        return this->carts.size();
+    unsigned int size(bool right = false) {
+        if (right)
+            return this->cartsRight.size();
+        return this->cartsLeft.size();
     }
 
     /**
      * Provede rotaci sloupce
      */
     void rotateOne() {
-        rotate(this->carts.begin(), this->carts.begin() + 1, this->carts.end());
+        if (size() > 0) {
+            Cart *cart = popLastCart();
+            addCart(cart, true);
+            getLastCart(true)->show();
+        } else if (size(true)) {
+            while (size(true) > 0) {
+                Cart *cart = popLastCart(true);
+                addCart(cart);
+                getLastCart()->hide();
+            }
+        }
     }
 
     bool canPush(Cart *cart, bool resultCol) {
@@ -72,11 +101,18 @@ public:
             return this->getLastCart()->canPush(cart, resultCol);
         }
     }
+    
+    bool findCart(Cart *cart) {
+        for (Cart *x : cartsLeft) {
+            if (x == cart)
+                return true;
+        }
+        return false;
+    }
 
 private:
-    vector<Cart*> carts;
-
-
+    vector<Cart*> cartsLeft;
+    vector<Cart*> cartsRight;
 };
 
 #endif /* COLUMNOFCART_H */

@@ -11,7 +11,16 @@
 #include "../src/Game.h"
 
 void printGame(Game *game) {
-    cout << "Rolovaci balicek: " << game->rotateColumnToString() << endl;
+    string leftCol = "";
+    string rightCol = "";
+    if (!game->getRotateColumn()->size()) 
+        leftCol = "X";
+    else leftCol = "-";
+    if (!game->getRotateColumn()->size(true)) 
+        leftCol = "X";
+    else leftCol = game->getRotateColumn()->getLastCart(true)->stringRepresentation();
+    
+    cout << "Rolovaci balicek: " << leftCol << " " << rightCol << endl;
     cout << "Odklaci baliek 1: " << game->resultColumnToString(0) << endl;
     cout << "Odklaci baliek 2: " << game->resultColumnToString(1) << endl;
     cout << "Odklaci baliek 3: " << game->resultColumnToString(2) << endl;
@@ -179,7 +188,7 @@ void testOtherMoves() {
 
     game->getCart(2, 2)->setNumber(13);
     game->getDeskColumn(0)->popLastCart();
-    if (!game->moveCartsOnDesk(2, 0, 1))
+    if (!game->moveCartsOnDesk(2, 1, 0))
         cout << "FAIL moveKing" << endl;
 }
 
