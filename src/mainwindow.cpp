@@ -176,18 +176,45 @@ void MainWindow::drawGame() {
             //vykresleni karty na desku
 
         }
-    }
+    }*/
     //generovani karet pro balicek
-    for (unsigned int y = 1; y < deck +1; y++){
+    for (unsigned int x = 0; x < game->getRotateColumn()->size(); x++){
 
+        //zjisteni attributu karty
+        cardType = game->getRotateColumn()->getCart(x)->getType();
+        cardValue = game->getRotateColumn()->getCart(x)->getNumber();
+        cardHidden = game->getRotateColumn()->getCart(x)->isHide();
 
         //Prirazeni obrazku karty + rub, nastaveni viditelnosti
-
-
-        //vykresleni karty na desku
+        if (cardHidden == true){
+            CardsDeck[x]->setIcon(ButtonIconBack);
+            CardsDeck[x]->setIconSize(cardBack.rect().size());
+            //CardsBoard[x * col->size() + y]->setIcon(ButtonIconBack);
+            //CardsBoard[x * col->size() + y]->setIconSize(cardBack.rect().size());
+        }
+        else {
+            switch (cardType) {
+                case Cart::HEART:
+                    karta = ":/cards/img/Hearts/"+std::to_string(cardValue) +".jpg";
+                    break;
+                case Cart::SPADES:
+                    karta = ":/cards/img/Spades/"+std::to_string(cardValue) +".jpg";
+                    break;
+                case Cart::SQUARE:
+                    karta = ":/cards/img/Diamonds/"+std::to_string(cardValue) +".jpg";
+                    break;
+                case Cart::LETTER:
+                    karta = ":/cards/img/Crosses/"+std::to_string(cardValue) +".jpg";
+                    break;
+            }
+            QPixmap card(karta.c_str());
+            QIcon BIC(card);
+            CardsDeck[x]->setIcon(ButtonIconBack);
+            CardsDeck[x]->setIconSize(cardBack.rect().size());
+        }
 
     }
-    //generovani karet pro odkladaci balicek
+  /*  //generovani karet pro odkladaci balicek
     for (unsigned int y = 1; y < pile +1; y++){
 
 
