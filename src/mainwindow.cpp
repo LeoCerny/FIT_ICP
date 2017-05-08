@@ -37,8 +37,10 @@ MainWindow::MainWindow(QWidget *parent) :
     this->game = new Game(7);
     QSize cardSize(73,98);
     int cardCounter = 0;
+    int cardMultiplier = 100;
     //generovnai karet pro herni sloupce
     for (unsigned int x = 0; x < game->getCoutDeskCols(); x++){
+        cardCounter = cardMultiplier*x;
         ColumnOfButton *buttons = new ColumnOfButton;
         ColumnOfCart *col = game->getDeskColumn(x);
 
@@ -74,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     //generovani karet pro top 4 sloupce
     for (unsigned int x = 0; x < 4; x++){
+        cardCounter = cardMultiplier*(x+7);
         ColumnOfButton *buttons = new ColumnOfButton;
         ColumnOfCart  *col = game->getResultColumn(x);
         unsigned int size = col->size();
@@ -110,6 +113,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     //generovani karet pro balicek
     for (unsigned int y = 0; y < game->getRotateColumn()->size() +1; y++){
+        cardCounter = cardMultiplier*11;
         QPushButton* card = new QPushButton(this);
 
         //Nataveni rozmeru tlacitka        
@@ -279,8 +283,13 @@ void MainWindow::On_Clicked(int index){
 
     QMessageBox mess;
     string text;
-    if (index)
-    text = "Zmackli jste kartu " + to_string(index);
+    unsigned int col = 0;
+    while (index >= 100) {
+        index -= 100;
+        col++;
+    }
+
+    text = "Zmackli jste kartu na sloupci " + to_string(col) + " cislo " + to_string(index);
     mess.setText(text.c_str());
     mess.exec();
 }
