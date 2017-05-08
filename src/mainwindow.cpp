@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->game = new Game(7);
     QSize cardSize(73,98);
-
+    int cardCounter = 0;
     //generovnai karet pro herni sloupce
     for (unsigned int x = 0; x < game->getCoutDeskCols(); x++){
         ColumnOfButton *buttons = new ColumnOfButton;
@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
         //mapovani tlacitka se signalem
         cardMapper->setMapping(card, card);
         connect(card, SIGNAL(clicked()), cardMapper, SLOT(map()));
+        cardCounter++;
 
         //ulozeni tlacitka do vectoru
         buttons->push(card);
@@ -62,8 +63,9 @@ MainWindow::MainWindow(QWidget *parent) :
             card->move(10+x*83,270+(y-1)*20);
 
             //mapovani tlacitka se signalem
-            cardMapper->setMapping(card, card);
+            cardMapper->setMapping(card, cardCounter);
             connect(card, SIGNAL(clicked()), cardMapper, SLOT(map()));
+            cardCounter++;
 
             //ulozeni tlacitka do vectoru
             buttons->push(card);
@@ -82,8 +84,9 @@ MainWindow::MainWindow(QWidget *parent) :
         card->move(259+x*83,70);
 
         //mapovani tlacitka se signalem
-        cardMapper->setMapping(card, card);
+        cardMapper->setMapping(card, cardCounter);
         connect(card, SIGNAL(clicked()), cardMapper, SLOT(map()));
+        cardCounter++;
 
         //ulozeni tlacitka do vectoru
         buttons->push(card);
@@ -95,8 +98,9 @@ MainWindow::MainWindow(QWidget *parent) :
             card->move(259+x*83,70);
 
             //mapovani tlacitka se signalem
-            cardMapper->setMapping(card, card);
+            cardMapper->setMapping(card, cardCounter);
             connect(card, SIGNAL(clicked()), cardMapper, SLOT(map()));
+            cardCounter++;
 
             //ulozeni tlacitka do vectoru            
             buttons->push(card);
@@ -113,8 +117,9 @@ MainWindow::MainWindow(QWidget *parent) :
         card->move(10,70);
 
         //mapovani tlacitka se signalem
-        cardMapper->setMapping(card, card);
+        cardMapper->setMapping(card, cardCounter);
         connect(card, SIGNAL(clicked()), cardMapper, SLOT(map()));
+        cardCounter++;
 
         //ulozeni tlacitka do vectoru
         CardsDeck.push_back(card);
@@ -259,17 +264,6 @@ void MainWindow::drawGame() {
 
 }
 
-/*void BoardGUI::On_Clicked(int index) {
-
-    //computer X and Y coordinates from index
-    unsigned int boardWidth = game->getGameBoard().getWidth();
-    unsigned int coordX = ((index % boardWidth) + 1);
-    unsigned int coordY = (((index - index % boardWidth) / boardWidth) + 1);
-
-    //put disk to selected coordinatess
-    game->currentPlayerPutDisk(coordX, coordY);
-}*/
-
 int getX(const int x) {
 
     return x * 80;
@@ -285,8 +279,8 @@ void MainWindow::On_Clicked(int index){
 
     QMessageBox mess;
     string text;
-
-    text = "Zmackli jste kartu " + std::to_string(index);
+    if (index)
+    text = "Zmackli jste kartu " + to_string(index);
     mess.setText(text.c_str());
     mess.exec();
 }
