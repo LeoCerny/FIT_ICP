@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "ColumnOfButton.h"
 #include "Cart.h"
+#include <QMessageBox>
 
 #include <iostream>
 //#include "GameBoard.h"
@@ -29,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //ui->Deck->setIconSize(pixmap.rect().size());
 
     //mapovac signalu dynamicky generovanych tlacitek
-    this->cardMapper = new QSignalMapper(this);
+    cardMapper = new QSignalMapper(this);
     connect(cardMapper, SIGNAL(mapped(int)), this, SLOT(On_Clicked(int)));
 
 
@@ -280,12 +281,22 @@ int getY(const int y) {
     return y * 20;
 }
 
+void MainWindow::On_Clicked(int index){
+
+    QMessageBox mess;
+    string text;
+
+    text = "Zmackli jste kartu " + std::to_string(index);
+    mess.setText(text.c_str());
+    mess.exec();
+}
+
 void MainWindow::on_Deck_clicked()
 {
     QPixmap pixmap("C:/Users/Ondra/Documents/Skola/ICP/Projekt/img/Hearts/HA.jpg");
     QIcon ButtonIcon(pixmap);
     //ui->Pile->setIcon(ButtonIcon);
-    //ui->Pile->setIconSize(pixmap.rect().size());    
+    //ui->Pile->setIconSize(pixmap.rect().size());
 }
 
 void MainWindow::on_actionUndo_triggered()

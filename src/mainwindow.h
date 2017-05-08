@@ -33,6 +33,8 @@ private slots:
 
     void on_actionUndo_triggered();
 
+    void On_Clicked(int index);
+
 private:
 
     Ui::MainWindow *ui;
