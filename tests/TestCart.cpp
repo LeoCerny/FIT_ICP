@@ -53,7 +53,7 @@ void testPushResultCol() {
     if (cartA->canPush(cartB, true))
         cout << "FAIL11" << endl;
     if (cartA->canPush(cartB, true))
-        cout << "FAIL12" << endl;
+        cout << "FAIL12" << endl;	
     cartB->setType(Cart::SQUARE);
     if (cartA->canPush(cartB, true))
         cout << "FAIL13" << endl;

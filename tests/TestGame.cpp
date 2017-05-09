@@ -113,6 +113,7 @@ void testBaseMoves() {
     game->getCart(5, 4)->setType(Cart::LETTER);
     game->getCart(5, 5)->setType(Cart::HEART);
 
+
     if (game->moveCarts(game->getDeskColumn(5), game->getDeskColumn(4), 4))
         cout << "FAIL3 move" << endl;
     if (game->getDeskColumn(4)->size() != 5 or game->getDeskColumn(5)->size() != 6)
@@ -182,7 +183,7 @@ void testOtherMoves() {
 
     game->getRotateColumn()->getLastCart()->setNumber(3);
     game->getRotateColumn()->getLastCart()->setType(Cart::LETTER);
-    printGame(game);
+
     if (!game->moveCartsRotateToDesk(4))
         cout << "FAIL moveRotateToDesk" << endl;
 

@@ -99,21 +99,20 @@ public:
      * @return Úspěch operace
      */
     bool canPush(Cart *cart, bool resultCol = false) {
-        if (!((!resultCol and this->number == cart->getNumber() + 1) or (resultCol and this->number + 1 == cart->getNumber())))
-            return false;
-        switch (this->type) {
-            case Cart::HEART:
-            case Cart::SQUARE:
-                if (!((!resultCol and (cart->getType() == Cart::LETTER || cart->getType() == Cart::SPADES)) or (resultCol and this->type == cart->getType())))
-                    return false;
-                break;
-            case Cart::LETTER:
-            case Cart::SPADES:
-                if (!((!resultCol and (cart->getType() == Cart::HEART || cart->getType() == Cart::SQUARE)) or (resultCol and this->type == cart->getType())))
-                    return false;
-                break;
+        if (resultCol) {
+            return (cart->type == type && cart->getNumber() == number + 1);
+        } else {
+            switch (type) {
+                case Cart::HEART:
+                case Cart::SQUARE:
+                    return ((cart->getType() == Cart::LETTER || cart->getType() == Cart::SPADES) and (number == cart->getNumber() + 1));
+                case Cart::LETTER:
+                case Cart::SPADES:
+                    return ((cart->getType() == Cart::HEART || cart->getType() == Cart::SQUARE) and (number == cart->getNumber() + 1));
+            }
         }
-        return true;
+
+        return false;
     }
 
     friend ostream& operator<<(std::ostream &strm, Cart *cart) {
@@ -136,10 +135,10 @@ public:
             case Cart::HEART:
                 type = "\u2665";
                 break;
-            case Cart::LETTER:
+            case Cart::SPADES:
                 type = "\u2660";
                 break;
-            case Cart::SPADES:
+            case Cart::LETTER:
                 type = "\u2663";
                 break;
             default:

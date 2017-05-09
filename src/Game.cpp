@@ -42,6 +42,7 @@ void Game::createGame() {
         Cart *cart2 = package->getCart();
         this->rotateColumn->addCart(cart2);
     }
+
 }
 
 bool Game::moveCarts(ColumnOfCart *src, ColumnOfCart *dest, unsigned int count, bool resultCol) {
@@ -54,11 +55,11 @@ bool Game::moveCarts(ColumnOfCart *src, ColumnOfCart *dest, unsigned int count, 
         } catch (invalid_argument e) {
         }
     }
-
     bool continueVar = false;
     if (temp->size() != 0) {
         continueVar = dest->canPush(temp->getLastCart(), resultCol);
     }
+    cout << continueVar << endl;
 
     i = temp->size();
     if (continueVar == true) {

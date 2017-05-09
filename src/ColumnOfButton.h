@@ -16,6 +16,12 @@ public:
         return buttons.size();
     }
 
+    QPushButton *popLast() {
+        QPushButton *button = buttons.at(buttons.size()-1);
+        buttons.pop_back();
+        return button;
+    }
+
 private:
     vector <QPushButton*> buttons;
 };

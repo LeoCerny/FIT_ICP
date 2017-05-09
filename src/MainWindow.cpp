@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     createGame()->drawBoard();
+    createGame()->drawBoard();
 
 }
 
@@ -23,6 +24,7 @@ GameBoard *MainWindow::createGame() {
     unsigned int size = games.size();
     GameBoard *game = new GameBoard(this,  size, defaultWidth, defaultHeight);
     game->setCardMapper(new QSignalMapper(this));
+    game->initBoard();
     games.insert(games.end(), game);
 
     if (games.size() < 2) setWindowSize(1);
@@ -33,25 +35,25 @@ GameBoard *MainWindow::createGame() {
 
 void MainWindow::On_Clicked(int index){
 
-    QMessageBox mess;
-    string text;
-    //int backupIndex = index;
     unsigned int col = 0;
+    unsigned int gameId = 0;
+    while (index >= 10000) {
+        index -= 10000;
+        gameId++;
+    }
     while (index >= 100) {
         index -= 100;
         col++;
     }
 
-    //podminka, ktera opravuje index v ramci ulozeni karet bez prazdneho tlacitka navic
-    if(index > 0){
-        index--;
-
-        text = "Zmackli jste kartu na sloupci " + to_string(col) + " cislo " + to_string(index);
-        mess.setText(text.c_str());
-        mess.exec();
-    }else {
-        // zde bude cast kodu, ktera osetruje stlaceni na praznde tlacitko ve sloupci
+    GameBoard *board = games.at(gameId);
+    if (col != 11) {
+        if (board->click(col, index))
+            board->click_actual = 0;
+    } else {
+        board->getGame()->getRotateColumn()->rotateOne();
     }
+    board->drawBoard();
 
 }
 
