@@ -1,4 +1,5 @@
 #include "ColumnOfButton.h"
+#include <stdexcept>
 
 QPushButton *ColumnOfButton::getByIndex(unsigned int index)  {
     if (index >= size())

@@ -8,7 +8,7 @@
 
 #include <time.h>
 #include <QApplication>
-#include "mainwindow.h"
+#include "MainWindow.h"
 
 using namespace std;
 int main(int argc, char *argv[]) {
