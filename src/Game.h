@@ -101,8 +101,8 @@ public:
      */
     bool moveCartsRotateToDesk(unsigned int destCol) {
         ColumnOfCart *dest = this->getDeskColumn(destCol);
-        if (dest->canPush(this->rotateColumn->getLastCart(), false)) {
-            dest->addCart(this->rotateColumn->popLastCart());
+        if (dest->canPush(this->rotateColumn->getLastCart(true), false)) {
+            dest->addCart(this->rotateColumn->popLastCart(true));
             return true;
         }
         return false;
@@ -117,8 +117,8 @@ public:
      */
     bool moveCartsRotateToResult(unsigned int destCol) {
         ColumnOfCart *dest = this->getResultColumn(destCol);
-        if (dest->canPush(this->rotateColumn->getLastCart(), true)) {
-            dest->addCart(this->rotateColumn->popLastCart());
+        if (dest->canPush(this->rotateColumn->getLastCart(true), true)) {
+            dest->addCart(this->rotateColumn->popLastCart(true));
             return true;
         }
         return false;

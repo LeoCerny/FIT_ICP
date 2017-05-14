@@ -9,11 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     createGame()->drawBoard();
-    createGame()->drawBoard();
 
 }
-
-
 
 MainWindow::~MainWindow()
 {
@@ -33,7 +30,7 @@ GameBoard *MainWindow::createGame() {
     return game;
 }
 
-void MainWindow::On_Clicked(int index){
+void MainWindow::On_Clicked(int index) {
 
     unsigned int col = 0;
     unsigned int gameId = 0;
@@ -48,8 +45,8 @@ void MainWindow::On_Clicked(int index){
 
     GameBoard *board = games.at(gameId);
     if (col != 11) {
-        if (board->click(col, index))
-            board->click_actual = 0;
+
+        board->click(col, index);
     } else {
         board->getGame()->getRotateColumn()->rotateOne();
     }
@@ -61,5 +58,3 @@ void MainWindow::on_actionUndo_triggered()
 {
     setWindowSize(2);
 }
-
-//*/

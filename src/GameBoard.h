@@ -67,7 +67,7 @@ public:
         click_actual = 1;
         click_col = col;
         if (click_col < 7) {
-            click_count = game->getDeskColumn(click_col)->size() - row + 1;
+            click_count = game->getDeskColumn(col)->size() - row + 1;
         } else {
             click_count = 1;
         }
@@ -75,7 +75,7 @@ public:
 
     bool click(unsigned int col, unsigned int row);
     void removeButtons(unsigned int col, unsigned int count);
-    void createButtons(unsigned int col, unsigned int count);
+    void createButtons(unsigned int col);
 
 private:
     unsigned int gameId;

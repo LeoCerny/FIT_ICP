@@ -5,42 +5,40 @@
 
 void GameBoard::initBoard()
 {
+    cout << endl << "init ";
     //mapovac signalu dynamicky generovanych tlacitek
     window->connect(cardMapper, SIGNAL(mapped(int)), window, SLOT(On_Clicked(int)));
 
-    int cardCounter = 0;
-    int cardMultiplier = 100;
+    unsigned int cardCounter = 0;
+    unsigned int cardMultiplier = 100;
 
     //generovnai karet pro herni sloupce
-    for (unsigned int x = 0; x < game->getCoutDeskCols(); x++) {
-        cardCounter = cardMultiplier*x;
+    for (unsigned int col = 0; col < game->getCoutDeskCols(); col++) {
+        cardCounter = cardMultiplier*col;
         ColumnOfButton *buttons = new ColumnOfButton;
-        ColumnOfCart *col = game->getDeskColumn(x);
+        ColumnOfCart *column = game->getDeskColumn(col);
 
         //Nataveni rozmeru tlacitka pro zacatek sloupce
         QPushButton* card = new QPushButton(window);
         card->setFixedSize(cardSize);
-        card->move(getX()+10+x*83,getY()+270);
+        card->move(getX() + 10 + col * 83, getY() + 270);
         card->setFlat(true);
 
         //mapovani tlacitka se signalem
-        cardMapper->setMapping(card,gameId * 10000 + cardCounter);
+        cardMapper->setMapping(card, gameId * 10000 + cardCounter);
         window->connect(card, SIGNAL(clicked()), cardMapper, SLOT(map()));
-        cardCounter++;
 
-        //ulozeni tlacitka do vectoru
-        buttons->push(card);
-        for (unsigned int y = 1; y < col->size()+1; y++){
+        for (unsigned int y = 0; y < column->size(); y++) {
+            cardCounter++;
             QPushButton* card = new QPushButton(window);
 
             //Nataveni rozmeru tlacitka
             card->setFixedSize(cardSize);
-            card->move(getX()+10+x*83,270+(y-1)*20+getY());
+            card->move(getX() + 10 + col * 83, 270 + y * 20 + getY());
 
             //mapovani tlacitka se signalem
             cardMapper->setMapping(card, gameId * 10000 + cardCounter);
             window->connect(card, SIGNAL(clicked()), cardMapper, SLOT(map()));
-            cardCounter++;
 
             //ulozeni tlacitka do vectoru
             buttons->push(card);
@@ -50,12 +48,12 @@ void GameBoard::initBoard()
 
     //generovani karet pro top 4 sloupce
     for (unsigned int x = 0; x < 4; x++) {
-        cardCounter = cardMultiplier*(x+7);
+        cardCounter = cardMultiplier * (x + game->getCoutDeskCols());
 
         //Nataveni rozmeru tlacitka
         QPushButton* card = new QPushButton(window);
         card->setFixedSize(cardSize);
-        card->move(getX()+259+x*83,70+getY());
+        card->move(getX() + 259 + x * 83, 70 + getY());
 
         //mapovani tlacitka se signalem
         cardMapper->setMapping(card, gameId * 10000 + cardCounter);
@@ -85,34 +83,36 @@ void GameBoard::initBoard()
     //mapovani tlacitka se signalem
     cardMapper->setMapping(cardRight, gameId * 10000 + cardCounter + 1);
     window->connect(cardRight, SIGNAL(clicked()), cardMapper, SLOT(map()));
+
+    cout << "OK" ;
 }
 
 void GameBoard::drawBoard()
 {
+    cout << endl << "draw ";
     //vykreslení karet pro herni sloupce na desce
     for (unsigned int x = 0; x < game->getCoutDeskCols(); x++) {
         ColumnOfCart  *col = game->getDeskColumn(x);
-        for (unsigned int y = 1; y < col->size()+1; y++) {
-
+        for (unsigned int y = 0; y < col->size(); y++) {
             //Prirazeni obrazku karty + rub, nastaveni viditelnosti
-            if (col->getCart(y-1)->isHide() == true){
+            if (col->getCart(y)->isHide() == true){
                 CardsBoard.at(x)->getByIndex(y)->setIcon(ButtonIcon);
                 CardsBoard.at(x)->getByIndex(y)->setIconSize(cardBack.rect().size());
             }
             else {
                 string karta;
-                switch (col->getCart(y-1)->getType()) {
+                switch (col->getCart(y)->getType()) {
                     case Cart::HEART:
-                        karta = ":/cards/img/Hearts/"+std::to_string(col->getCart(y-1)->getNumber()) +".jpg";
+                        karta = ":/cards/img/Hearts/"+std::to_string(col->getCart(y)->getNumber()) +".jpg";
                         break;
                     case Cart::SPADES:
-                        karta = ":/cards/img/Spades/"+std::to_string(col->getCart(y-1)->getNumber()) +".jpg";
+                        karta = ":/cards/img/Spades/"+std::to_string(col->getCart(y)->getNumber()) +".jpg";
                         break;
                     case Cart::SQUARE:
-                        karta = ":/cards/img/Diamonds/"+std::to_string(col->getCart(y-1)->getNumber()) +".jpg";
+                        karta = ":/cards/img/Diamonds/"+std::to_string(col->getCart(y)->getNumber()) +".jpg";
                         break;
                     case Cart::LETTER:
-                        karta = ":/cards/img/Crosses/"+std::to_string(col->getCart(y-1)->getNumber()) +".jpg";
+                        karta = ":/cards/img/Crosses/"+std::to_string(col->getCart(y)->getNumber()) +".jpg";
                         break;
                 }
                 QPixmap card(karta.c_str());
@@ -185,65 +185,70 @@ void GameBoard::drawBoard()
     } else {
         cardRight->setIcon(QIcon());
     }
+
+    cout << "OK";
 }
 
 bool GameBoard::click(unsigned int col, unsigned int row) {
     if (click_actual == 0) {
-        setFirstClick(col, row);
+        click_col = col;
+        click_count = row;
+        click_actual = 1;
     } else if(click_actual == 1) {
-        click_actual++;
+        click_actual = 2;
         click_col2 = col;
     }
+
+
+    cout << "-START-----------------------------" << endl;
+    cout << col << "-cout" << game->getDeskColumn(click_col)->size() - click_count + 1 <<endl;
 
     if (click_actual == 2) {
         if (click_col < 7) {
             if (click_col2 < 7) {
-                if (game->moveCartsOnDesk(click_col, click_col2, click_count)) {
-                    removeButtons(click_col, click_count);
-                    createButtons(click_col2, click_count);
-                    return true;
-                } else {
-                    setFirstClick(col, row);
+                unsigned int count = game->getDeskColumn(click_col)->size() - click_count + 1;
+                if (game->moveCartsOnDesk(click_col, count, click_col2)) {
+                    removeButtons(click_col, count);
+                    createButtons(click_col2);
+                    click_actual = 3;
                 }
-            } else if (click_col2 < 11) {
+            } else if (click_col2 < 11) {//ok
                 if (game->moveCartsDeskToResult(click_col, click_col2 - 7)) {
                     removeButtons(click_col, 1);
-                    return true;
-                } else {
-                    setFirstClick(col, row);
+                    click_actual = 3;
                 }
             }
         } else if (click_col < 11) {
             if (click_col2 < 7) {
-                if (game->moveCarts(game->getResultColumn(click_col), game->getDeskColumn(click_col2), 1)) {
-                    createButtons(click_col2, 1);
-                    return true;
-                } else {
-                    setFirstClick(col, row);
+                if (game->moveCarts(game->getResultColumn(click_col-7), game->getDeskColumn(click_col2), 1)) {
+                    createButtons(click_col2);
+                    click_actual = 3;
                 }
-            } else if (click_col2 < 11) {
+            } else if (click_col2 < 11) {//ok
                 if (game->moveCarts(game->getResultColumn(click_col-7), game->getResultColumn(click_col2-7), 1, true)) {
-                    return true;
-                } else {
-                    setFirstClick(col, row);
+                    click_actual = 3;
                 }
             }
         } else {
-            if (click_col2 < 7) {
+            if (click_col2 < 7) {//ok
                 if (game->moveCartsRotateToDesk(click_col2)) {
-                    createButtons(click_col2, 1);
-                    return true;
-                } else {
-                    setFirstClick(col, row);
+                    createButtons(click_col2);
+                    click_actual = 3;
                 }
-            } else if (click_col2 < 11) {
-                if (game->moveCartsRotateToResult(click_col-7)) {
-                    return true;
-                } else {
-                    setFirstClick(col, row);
+            } else if (click_col2 < 11) {//ok
+                if (game->moveCartsRotateToResult(click_col2-7)) {
+                    click_actual = 3;
                 }
             }
         }
+        click_actual = 0;
+    }
+
+    printGame(game);
+    cout << "-END-----------------------------" << endl;
+    if (click_actual == 3) {
+        click_actual = 0;
+        return true;
     }
     return false;
 }
@@ -256,27 +261,30 @@ void GameBoard::removeButtons(unsigned int col, unsigned int count)
     }
 }
 
-void GameBoard::createButtons(unsigned int col, unsigned int count)
+void GameBoard::createButtons(unsigned int col)
 {
-    for (unsigned int i = 0; i < count; i++) {
-        ColumnOfCart *column = game->getDeskColumn(col);
+    cout << CardsBoard.at(col)->size() << "-" << game->getDeskColumn(col)->size() << endl;
+    ColumnOfButton *column = CardsBoard.at(col);
+    for (unsigned int i = column->size() - 1; i < game->getDeskColumn(col)->size() - 1; i++) {
+        cout << "create button" << endl;
+
         QPushButton *button = new QPushButton(window);
+
         //Nataveni rozmeru tlacitka
         button->setFixedSize(cardSize);
-        button->move(getX()+10+col*83,270+(column->size())*20+getY());
+        button->move(getX() + 10 + col * 83, 270 +  i  * 20+getY());
 
         //mapovani tlacitka se signalem
-        cardMapper->setMapping(button, gameId * 10000 + col * 100 + column->size());
+        cardMapper->setMapping(button, gameId * 10000 + col * 100 + i);
         window->connect(button, SIGNAL(clicked()), cardMapper, SLOT(map()));
 
-        ColumnOfButton*column2 = CardsBoard.at(col);
-        column2->push(button);
-
+        CardsBoard.at(col)->push(button);
     }
 
 }
 
-void GameBoard::printGame(Game *game) {
+void GameBoard::printGame(Game *game)
+{
     string leftCol = "";
     string rightCol = "";
     if (!game->getRotateColumn()->size())
@@ -313,4 +321,5 @@ void GameBoard::printGame(Game *game) {
         cout << endl;
         row++;
     }
+
 }
