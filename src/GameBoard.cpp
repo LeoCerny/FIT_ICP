@@ -21,7 +21,7 @@ void GameBoard::initBoard()
         //Nataveni rozmeru tlacitka pro zacatek sloupce
         QPushButton* card = new QPushButton(window);
         card->setFixedSize(cardSize);
-        card->move(getX() + 10 + col * 83, getY() + 270);
+        card->move(getX() + 10 + col * 83, getY() + this->marginDeskTop);
         card->setFlat(true);
 
         //mapovani tlacitka se signalem
@@ -34,7 +34,7 @@ void GameBoard::initBoard()
 
             //Nataveni rozmeru tlacitka
             card->setFixedSize(cardSize);
-            card->move(getX() + 10 + col * 83, 270 + y * 20 + getY());
+            card->move(getX() + 10 + col * 83, this->marginDeskTop + y * 20 + getY());
 
             //mapovani tlacitka se signalem
             cardMapper->setMapping(card, gameId * 10000 + cardCounter);
@@ -199,13 +199,13 @@ bool GameBoard::click(unsigned int col, unsigned int row) {
         click_col2 = col;
     }
 
-
-    cout << "-START-----------------------------" << endl;
-    cout << col << "-cout" << game->getDeskColumn(click_col)->size() - click_count + 1 <<endl;
-
-    if (click_actual == 2) {
+    if (col == 12) {
+        click_col = 12;
+        click_count = 1;
+        click_actual = 1;
+    } else if (click_actual == 2) {
         if (click_col < 7) {
-            if (click_col2 < 7) {
+            if (click_col2 < 7) {//ok
                 unsigned int count = game->getDeskColumn(click_col)->size() - click_count + 1;
                 if (game->moveCartsOnDesk(click_col, count, click_col2)) {
                     removeButtons(click_col, count);
@@ -241,16 +241,17 @@ bool GameBoard::click(unsigned int col, unsigned int row) {
                 }
             }
         }
-        click_actual = 0;
     }
 
-    printGame(game);
-    cout << "-END-----------------------------" << endl;
     if (click_actual == 3) {
         click_actual = 0;
         return true;
+    } else if (click_actual == 2){
+        click_actual = 1;
+        click_col = col;
+        click_count = row;
+        return false;
     }
-    return false;
 }
 
 void GameBoard::removeButtons(unsigned int col, unsigned int count)
@@ -263,16 +264,18 @@ void GameBoard::removeButtons(unsigned int col, unsigned int count)
 
 void GameBoard::createButtons(unsigned int col)
 {
-    cout << CardsBoard.at(col)->size() << "-" << game->getDeskColumn(col)->size() << endl;
-    ColumnOfButton *column = CardsBoard.at(col);
-    for (unsigned int i = column->size() - 1; i < game->getDeskColumn(col)->size() - 1; i++) {
+    for (unsigned int i = CardsBoard.at(col)->size(); i < game->getDeskColumn(col)->size(); i++) {
         cout << "create button" << endl;
 
         QPushButton *button = new QPushButton(window);
 
         //Nataveni rozmeru tlacitka
         button->setFixedSize(cardSize);
-        button->move(getX() + 10 + col * 83, 270 +  i  * 20+getY());
+        if (CardsBoard.at(col)->size())
+            button->move(CardsBoard.at(col)->getLast()->pos().x(), CardsBoard.at(col)->getLast()->pos().y() + 20);
+        else
+            button->move(getX() + 10 + col * 83, getY() + this->marginDeskTop);
+        button->show();
 
         //mapovani tlacitka se signalem
         cardMapper->setMapping(button, gameId * 10000 + col * 100 + i);
@@ -280,7 +283,6 @@ void GameBoard::createButtons(unsigned int col)
 
         CardsBoard.at(col)->push(button);
     }
-
 }
 
 void GameBoard::printGame(Game *game)

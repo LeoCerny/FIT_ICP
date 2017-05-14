@@ -82,6 +82,8 @@ private:
     unsigned int width;
     unsigned int height;
 
+    unsigned int marginDeskTop = 190;
+
     unsigned int click_col;
     unsigned int click_col2;
     unsigned int click_count;

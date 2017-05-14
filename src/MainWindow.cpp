@@ -51,7 +51,6 @@ void MainWindow::On_Clicked(int index) {
         board->getGame()->getRotateColumn()->rotateOne();
     }
     board->drawBoard();
-
 }
 
 void MainWindow::on_actionUndo_triggered()

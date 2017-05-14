@@ -12,6 +12,10 @@ public:
         buttons.insert(buttons.end(), btn);
     }
     QPushButton *getByIndex(unsigned int index);
+    QPushButton *getLast() {
+        return buttons.at(buttons.size() - 1);
+    }
+
     unsigned int size() {
         return buttons.size();
     }
