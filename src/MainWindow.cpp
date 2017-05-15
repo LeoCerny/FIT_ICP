@@ -73,7 +73,7 @@ void MainWindow::On_IconClicked(int index)
         game->createNewGame();
         break;
     case 1://undo
-
+        game->undo();
         break;
     case 2://save
         game->save();

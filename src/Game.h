@@ -112,6 +112,7 @@ public:
      * @return 
      */
     bool moveCartsRotateToDesk(unsigned int destCol) {
+        addMove();
         ColumnOfCart *dest = this->getDeskColumn(destCol);
         if (dest->canPush(this->rotateColumn->getLastCart(true), false)) {
             dest->addCart(this->rotateColumn->popLastCart(true));
@@ -128,6 +129,7 @@ public:
      * @return 
      */
     bool moveCartsRotateToResult(unsigned int destCol) {
+        addMove();
         ColumnOfCart *dest = this->getResultColumn(destCol);
         if (dest->canPush(this->rotateColumn->getLastCart(true), true)) {
             dest->addCart(this->rotateColumn->popLastCart(true));
@@ -153,7 +155,7 @@ public:
      * Provede rotaci rotačního sloupce
      */
     void rotate() {
-
+        addMove();
         this->rotateColumn->rotateOne();
     }
 
@@ -184,8 +186,9 @@ private:
     vector<ColumnOfCart*> results;
     vector<ColumnOfCart*> desk;
     unsigned int countDeskCols;
+    vector <string> moves;
 
-
+    void addMove();
     /**
      * Vygeneruje hru
      */

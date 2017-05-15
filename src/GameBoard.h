@@ -134,7 +134,6 @@ public:
         if (game->load(dialog.getOpenFileName().toStdString())) {
             destroy();
             this->game = game;
-            printGame(game);
             for (unsigned int var = 0; var < game->getCoutDeskCols(); var++) {
                 createButtons(var);
             }
@@ -148,6 +147,17 @@ public:
             msgBox.setText("Hru se nepodarilo nahrat");
             msgBox.exec();
         }
+    }
+
+    void undo() {
+        this->game->undo();
+        for (unsigned int var = 0; var < game->getCoutDeskCols(); var++) {
+            removeButtons(var, 30);
+        }
+        for (unsigned int var = 0; var < game->getCoutDeskCols(); var++) {
+            createButtons(var);
+        }
+        drawBoard();
     }
 
 

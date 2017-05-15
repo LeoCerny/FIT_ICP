@@ -10,6 +10,7 @@
 
 #include <stdexcept>
 #include <fstream>
+#include <sstream>
 #include <regex>
 
 #include "Game.h"
@@ -49,6 +50,7 @@ void Game::createGame() {
 }
 
 bool Game::moveCarts(ColumnOfCart *src, ColumnOfCart *dest, unsigned int count, bool resultCol) {
+    addMove();
     unsigned int i;
     ColumnOfCart *temp = new ColumnOfCart;
     for (i = 0; i < count; i++) {
@@ -238,11 +240,105 @@ bool Game::load(string path) {
         }
         index++;
     }
-
     return true;
+}
 
+void Game::addMove() {
+    string move;
+    for (unsigned int i = 0; i < rotateColumn->size(); i++) {
+        move += rotateColumn->getCart(i)->save();
+        move += " ";
+    }
+    move += "\n";
 
+    for (unsigned int i = 0; i < rotateColumn->size(true); i++) {
+        move += rotateColumn->getCart(i, true)->save();
+        move += " ";
+    }
+    move += "\n";
+    for (unsigned int i = 0; i < results.size(); i++) {
+        for (unsigned int x = 0; x < results.at(i)->size(); x++) {
+            move += results.at(i)->getCart(x)->save();
+            move += " ";
+        }
+        move += "\n";
+    }
+
+    for (unsigned int i = 0; i < desk.size(); i++) {
+        for (unsigned int x = 0; x < desk.at(i)->size(); x++) {
+            move += desk.at(i)->getCart(x)->save();
+            move += " ";
+        }
+        move += "\n";
+    }
+    this->moves.push_back(move);
 }
 
 void Game::undo() {
+    if (moves.size() == 0)
+        return;
+    string line;
+
+    while (results.size())
+        results.pop_back();
+    while(desk.size())
+        desk.pop_back();
+
+    istringstream file(moves.at(moves.size()-1));
+    moves.pop_back();
+
+    unsigned int index = 0;
+
+    regex reg("([0-9]+)-([0-9]+)-([0-9]+)");
+    smatch match;
+    ColumnOfCart *col;
+    while(getline(file, line)) {
+        switch (index) {
+        case 0://rotate left
+            rotateColumn = new ColumnOfCart;
+            while (regex_search(line, match, reg)) {
+                Cart *cart = new Cart(atoi(match.str(1).c_str()), atoi(match.str(2).c_str()));
+                if (atoi(match.str(3).c_str()) == 0)
+                    cart->show();
+                rotateColumn->addCart(cart);
+                line = match.suffix().str();
+            }
+            break;
+        case 1:
+            while (regex_search(line, match, reg)) {
+                Cart *cart = new Cart(atoi(match.str(1).c_str()), atoi(match.str(2).c_str()));
+                if (atoi(match.str(3).c_str()) == 0)
+                    cart->show();
+                rotateColumn->addCart(cart, true);
+                line = match.suffix().str();
+            }
+            break;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+            col = new ColumnOfCart();
+            while (regex_search(line, match, reg)) {
+                Cart *cart = new Cart(atoi(match.str(1).c_str()), atoi(match.str(2).c_str()));
+                if (atoi(match.str(3).c_str()) == 0)
+                    cart->show();
+                col->addCart(cart, true);
+                line = match.suffix().str();
+            }
+            results.push_back(col);
+            break;
+        default:
+            col = new ColumnOfCart();
+            while (regex_search(line, match, reg)) {
+                Cart *cart = new Cart(atoi(match.str(1).c_str()), atoi(match.str(2).c_str()));
+                if (atoi(match.str(3).c_str()) == 0)
+                    cart->show();
+                col->addCart(cart);
+                line = match.suffix().str();
+            }
+            desk.insert(desk.end(), col);
+            break;
+        }
+        index++;
+    }
 }
