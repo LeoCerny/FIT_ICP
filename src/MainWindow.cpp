@@ -95,5 +95,5 @@ void MainWindow::on_actionUndo_triggered()
 
 void MainWindow::on_actionAddGame_triggered()
 {
-
+    createGame();
 }

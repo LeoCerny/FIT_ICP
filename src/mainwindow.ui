@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>591</width>
-     <height>19</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSoubor">
@@ -31,6 +31,7 @@
     <addaction name="actionUndo"/>
     <addaction name="actionSaveGame"/>
     <addaction name="actionLoadGame"/>
+    <addaction name="actionAddGame"/>
     <addaction name="actionExit"/>
    </widget>
    <addaction name="menuSoubor"/>
@@ -106,6 +107,14 @@
    </property>
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionAddGame">
+   <property name="text">
+    <string>Pridat hru</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
   </action>
  </widget>

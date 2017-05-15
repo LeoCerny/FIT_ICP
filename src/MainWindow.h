@@ -31,6 +31,8 @@ public slots:
 
 private slots:
     void on_actionUndo_triggered();
+    void on_actionAddGame_triggered();
+
 private:
     Ui::MainWindow *ui;
     vector <GameBoard *> games;
