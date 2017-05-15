@@ -30,10 +30,10 @@ void GameBoard::initBoard()
     saveGame->setFixedSize(size);
 
 
-    newGame->move(10, 20);
-    undo->move(50, 20);
-    saveGame->move(90, 20);
-    loadGame->move(130, 20);
+    newGame->move(getX() + 10, getY() + 20);
+    undo->move(getX() + 50, getY() + 20);
+    saveGame->move(getX() + 90, getY() + 20);
+    loadGame->move(getX() + 130, getY() + 20);
 
     saveGame->setFixedSize(size);
     newGame->setFixedSize(size);

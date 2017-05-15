@@ -61,7 +61,7 @@ void MainWindow::On_IconClicked(int index)
 {
     unsigned int gameId = 0;
 
-    while (index > 100) {
+    while (index >= 100) {
         index -= 100;
         gameId++;
     }
@@ -88,12 +88,7 @@ void MainWindow::On_IconClicked(int index)
     cout << "OK" << endl;
 }
 
-void MainWindow::on_actionUndo_triggered()
-{
-    setWindowSize(2);
-}
-
 void MainWindow::on_actionAddGame_triggered()
 {
-    createGame();
+    createGame()->drawBoard();
 }

@@ -221,7 +221,7 @@ bool Game::load(string path) {
                 Cart *cart = new Cart(atoi(match.str(1).c_str()), atoi(match.str(2).c_str()));
                 if (atoi(match.str(3).c_str()) == 0)
                     cart->show();
-                col->addCart(cart, true);
+                col->addCart(cart);
                 line = match.suffix().str();
             }
             results.push_back(col);

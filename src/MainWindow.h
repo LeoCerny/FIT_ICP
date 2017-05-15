@@ -15,7 +15,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    unsigned int defaultHeight = 700;
+    unsigned int defaultHeight = 600;
     unsigned int defaultWidth = 591;
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -30,7 +30,6 @@ public slots:
     void On_IconClicked(int index);
 
 private slots:
-    void on_actionUndo_triggered();
     void on_actionAddGame_triggered();
 
 private:
