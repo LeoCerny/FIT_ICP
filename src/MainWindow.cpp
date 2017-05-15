@@ -92,3 +92,8 @@ void MainWindow::on_actionUndo_triggered()
 {
     setWindowSize(2);
 }
+
+void MainWindow::on_actionAddGame_triggered()
+{
+
+}
