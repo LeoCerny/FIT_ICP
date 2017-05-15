@@ -61,7 +61,7 @@ public:
     }
 
     void rotate() {
-        game->getRotateColumn()->rotateOne();
+        game->rotate();
     }
 
 
@@ -126,7 +126,6 @@ public:
             msgBox.exec();
         }
     }
-
     void load() {
         QFileDialog dialog(0, "Nahrat hru", QDir::currentPath() );
         dialog.selectNameFilter("Text Files (*.txt)");
@@ -148,7 +147,6 @@ public:
             msgBox.exec();
         }
     }
-
     void undo() {
         this->game->undo();
         for (unsigned int var = 0; var < game->getCoutDeskCols(); var++) {

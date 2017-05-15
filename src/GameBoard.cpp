@@ -305,13 +305,14 @@ bool GameBoard::click(unsigned int col, unsigned int row) {
             }
         } else {
             if (click_col == click_col2) {
-                for (unsigned int i = 0; i < 4; i++) {
-                    if (game->getResultColumn(i)->canPush(game->getRotateColumn()->getLastCart(true), true)) {
-                        game->moveCartsRotateToResult(i);
-                        click_actual = 3;
-                        break;
+                if (game->getRotateColumn()->size(true))
+                    for (unsigned int i = 0; i < 4; i++) {
+                        if (game->getResultColumn(i)->canPush(game->getRotateColumn()->getLastCart(true), true)) {
+                            game->moveCartsRotateToResult(i);
+                            click_actual = 3;
+                            break;
+                        }
                     }
-                }
             } else if (click_col2 < 7) {//ok
                 if (game->moveCartsRotateToDesk(click_col2)) {
                     createButtons(click_col2);
@@ -352,9 +353,9 @@ void GameBoard::removeButtons(unsigned int col, unsigned int count)
 
 void GameBoard::createButtons(unsigned int col)
 {
-    cout << "CREATE START" << endl;
+    //cout << "CREATE BUTTONS" << endl;
     for (unsigned int i = CardsBoard.at(col)->size(); i < game->getDeskColumn(col)->size(); i++) {
-        cout << "create button" << endl;
+        //cout << "create button" << endl;
 
         QPushButton *button = new QPushButton(window);
 
@@ -372,7 +373,7 @@ void GameBoard::createButtons(unsigned int col)
 
         CardsBoard.at(col)->push(button);
     }
-    cout << "CREATE STOP" << endl;
+    //cout << "CREATE STOP" << endl;
 }
 
 void GameBoard::printGame(Game *game)

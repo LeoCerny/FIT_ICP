@@ -52,7 +52,7 @@ void MainWindow::On_Clicked(int index) {
     } else if (col != 11) {
         board->click(col, index);
     } else {
-        board->getGame()->getRotateColumn()->rotateOne();
+        board->rotate();
     }
     board->drawBoard();
 }

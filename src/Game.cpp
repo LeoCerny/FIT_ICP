@@ -256,6 +256,7 @@ void Game::addMove() {
         move += " ";
     }
     move += "\n";
+
     for (unsigned int i = 0; i < results.size(); i++) {
         for (unsigned int x = 0; x < results.at(i)->size(); x++) {
             move += results.at(i)->getCart(x)->save();
@@ -304,7 +305,7 @@ void Game::undo() {
                 line = match.suffix().str();
             }
             break;
-        case 1:
+        case 1://rotate right
             while (regex_search(line, match, reg)) {
                 Cart *cart = new Cart(atoi(match.str(1).c_str()), atoi(match.str(2).c_str()));
                 if (atoi(match.str(3).c_str()) == 0)
@@ -313,19 +314,19 @@ void Game::undo() {
                 line = match.suffix().str();
             }
             break;
-        case 2:
-        case 3:
-        case 4:
+        case 2://top 0
+        case 3://top 1
+        case 4://top 2
         case 5:
             col = new ColumnOfCart();
             while (regex_search(line, match, reg)) {
                 Cart *cart = new Cart(atoi(match.str(1).c_str()), atoi(match.str(2).c_str()));
                 if (atoi(match.str(3).c_str()) == 0)
                     cart->show();
-                col->addCart(cart, true);
+                col->addCart(cart);
                 line = match.suffix().str();
             }
-            results.push_back(col);
+            results.insert(results.end(), col);
             break;
         default:
             col = new ColumnOfCart();
