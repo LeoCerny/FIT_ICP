@@ -21,6 +21,7 @@ GameBoard *MainWindow::createGame() {
     unsigned int size = games.size();
     GameBoard *game = new GameBoard(this,  size, defaultWidth, defaultHeight);
     game->setCardMapper(new QSignalMapper(this));
+    game->setHeadMapper(new QSignalMapper(this));
     game->initBoard();
     games.insert(games.end(), game);
 
@@ -44,13 +45,47 @@ void MainWindow::On_Clicked(int index) {
     }
 
     GameBoard *board = games.at(gameId);
-    if (col != 11) {
-
+    if (board->isFinished()) {
+        QMessageBox msgBox;
+        msgBox.setText("Hra je jiz dohrana");
+        msgBox.exec();
+    } else if (col != 11) {
         board->click(col, index);
     } else {
         board->getGame()->getRotateColumn()->rotateOne();
     }
     board->drawBoard();
+}
+
+void MainWindow::On_IconClicked(int index)
+{
+    unsigned int gameId = 0;
+
+    while (index > 100) {
+        index -= 100;
+        gameId++;
+    }
+
+    GameBoard *game = games.at(gameId);
+    cout << endl << "icon " ;
+    switch (index) {
+    case 0://new
+        game->createNewGame();
+        break;
+    case 1://undo
+
+        break;
+    case 2://save
+        game->save();
+        break;
+    case 3://load
+        game->load();
+        break;
+    default:
+        cout << "unknown icon" << endl;
+        break;
+    }
+    cout << "OK" << endl;
 }
 
 void MainWindow::on_actionUndo_triggered()

@@ -99,8 +99,6 @@ public:
      * @return Úspěch operace
      */
     bool canPush(Cart *cart, bool resultCol = false) {
-        cout << "LOCAL:" << this->stringRepresentation() << endl;
-        cout << cart << endl;
         if (resultCol) {
             return (cart->type == type && cart->getNumber() == number + 1);
         } else {
@@ -115,6 +113,10 @@ public:
         }
 
         return false;
+    }
+
+    string save() {
+        return to_string(type) + "-" + to_string(number) + "-" + to_string(isHidden);
     }
 
     friend ostream& operator<<(std::ostream &strm, Cart *cart) {

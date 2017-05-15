@@ -9,16 +9,19 @@
 
 
 #include <stdexcept>
+#include <fstream>
+#include <regex>
 
 #include "Game.h"
 #include "Package.h"
 
-Game::Game(unsigned int countDeskCols) {
+Game::Game(unsigned int countDeskCols, bool autoInit) {
     this->countDeskCols = countDeskCols;
     if (this->countDeskCols > 9)
         throw invalid_argument("Maximalní počet sloupců na herní ploše může být 9");
     this->rotateColumn = new ColumnOfCart;
-    this->createGame();
+    if (autoInit)
+        this->createGame();
 }
 
 void Game::createGame() {
@@ -59,7 +62,6 @@ bool Game::moveCarts(ColumnOfCart *src, ColumnOfCart *dest, unsigned int count, 
     if (temp->size() != 0) {
         continueVar = dest->canPush(temp->getLastCart(), resultCol);
     }
-    cout << continueVar << endl;
 
     i = temp->size();
     if (continueVar == true) {
@@ -131,11 +133,116 @@ bool Game::moveCartsDeskToResult(unsigned int srcCol, unsigned int destCol) {
             src->getLastCart()->show();
         } catch (invalid_argument e) {
         }
+        if (getMaxHeightCol() == 0)
+            activeGame = false;
         return true;
     } else return false;
 }
 
-void Game::save() {
+bool Game::save(string path) {
+    if (!ofstream(path.c_str())) {
+        return false;
+    }
+
+    ofstream file(path);
+
+    for (unsigned int i = 0; i < rotateColumn->size(); i++) {
+        file << rotateColumn->getCart(i)->save();
+        file << " ";
+    }
+    file << endl;
+
+    for (unsigned int i = 0; i < rotateColumn->size(true); i++) {
+        file << rotateColumn->getCart(i, true)->save();
+        file << " ";
+    }
+    file << endl;
+
+    for (unsigned int i = 0; i < results.size(); i++) {
+        for (unsigned int x = 0; x < results.at(i)->size(); x++) {
+            file << results.at(i)->getCart(x)->save();
+            file << " ";
+        }
+        file << endl;
+    }
+
+    for (unsigned int i = 0; i < desk.size(); i++) {
+        for (unsigned int x = 0; x < desk.at(i)->size(); x++) {
+            file << desk.at(i)->getCart(x)->save();
+            file << " ";
+        }
+        file << endl;
+    }
+
+    file.close();
+    return true;
+}
+
+bool Game::load(string path) {
+    if (!ifstream(path.c_str())) {
+        return false;
+    }
+    ifstream file(path);
+
+    string line;
+    unsigned int index = 0;
+    regex reg("([0-9]+)-([0-9]+)-([0-9]+)");
+    smatch match;
+    ColumnOfCart *col;
+    while(getline(file, line)) {
+        cout << line << endl << endl;
+        switch (index) {
+        case 0://rotate left
+            rotateColumn = new ColumnOfCart;
+            while (regex_search(line, match, reg)) {
+                Cart *cart = new Cart(atoi(match.str(1).c_str()), atoi(match.str(2).c_str()));
+                if (atoi(match.str(3).c_str()) == 0)
+                    cart->show();
+                rotateColumn->addCart(cart);
+                line = match.suffix().str();
+            }
+            break;
+        case 1:
+            while (regex_search(line, match, reg)) {
+                Cart *cart = new Cart(atoi(match.str(1).c_str()), atoi(match.str(2).c_str()));
+                if (atoi(match.str(3).c_str()) == 0)
+                    cart->show();
+                rotateColumn->addCart(cart, true);
+                line = match.suffix().str();
+            }
+            break;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+            col = new ColumnOfCart();
+            while (regex_search(line, match, reg)) {
+                Cart *cart = new Cart(atoi(match.str(1).c_str()), atoi(match.str(2).c_str()));
+                if (atoi(match.str(3).c_str()) == 0)
+                    cart->show();
+                col->addCart(cart, true);
+                line = match.suffix().str();
+            }
+            results.push_back(col);
+            break;
+        default:
+            col = new ColumnOfCart();
+            while (regex_search(line, match, reg)) {
+                Cart *cart = new Cart(atoi(match.str(1).c_str()), atoi(match.str(2).c_str()));
+                if (atoi(match.str(3).c_str()) == 0)
+                    cart->show();
+                col->addCart(cart, true);
+                line = match.suffix().str();
+            }
+            desk.push_back(col);
+            break;
+        }
+        index++;
+    }
+
+    return true;
+
+
 }
 
 void Game::undo() {

@@ -18,10 +18,11 @@ using namespace std;
 
 class Game {
 public:
+    bool activeGame = true;
     /**
      * @param countDeskCols Počet sloupců s kartami na hrací ploše
      */
-    Game(unsigned int countDeskCols);
+    Game(unsigned int countDeskCols, bool autoInit = true);
 
     /**
      * @return Počet sloupců karet na hrací desce
@@ -36,8 +37,19 @@ public:
     unsigned int getMaxHeightCol();
     /**
      * Uloží rozehranou hru
+     *
+     * @param path Cesta k souboru pro uloženi hry
+     * @return Úspěch operace
      */
-    void save();
+    bool save(string path);
+
+    /**
+     * Nahraje uloženou hru
+     *
+     * @param path Cesta k souboru pro nahraní hry
+     * @return Úspěch operace
+     */
+    bool load(string path);
 
     /**
      * Vratí tah zpět
@@ -71,7 +83,7 @@ public:
      * @return Konec hry?
      */
     bool isEnd() {
-        return false;
+        return !activeGame;
     }
 
     /**
@@ -119,6 +131,8 @@ public:
         ColumnOfCart *dest = this->getResultColumn(destCol);
         if (dest->canPush(this->rotateColumn->getLastCart(true), true)) {
             dest->addCart(this->rotateColumn->popLastCart(true));
+            if (getMaxHeightCol() == 0)
+                activeGame = false;
             return true;
         }
         return false;

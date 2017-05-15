@@ -27,6 +27,7 @@ public:
 
 public slots:
     void On_Clicked(int index);
+    void On_IconClicked(int index);
 
 private slots:
     void on_actionUndo_triggered();
