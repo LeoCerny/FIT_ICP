@@ -342,7 +342,11 @@ void GameBoard::removeButtons(unsigned int col, unsigned int count)
 {
     ColumnOfButton *column = CardsBoard.at(col);
     for (unsigned int var = 0; var < count; var++) {
-        delete column->popLast();
+        try {
+            delete column->popLast();
+        } catch (invalid_argument e) {
+            break;
+        }
     }
 }
 

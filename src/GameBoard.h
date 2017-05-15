@@ -100,46 +100,17 @@ public:
     void createButtons(unsigned int col);
 
     void destroy() {
-        delete cardLeft;
-        delete cardRight;
-
-        unsigned int size = CardsTop.size();
-        for (unsigned int var = 0; var < size; var++) {
-            delete CardsTop.at(CardsTop.size() - 1);
-            CardsTop.pop_back();
-        }
-
-        size = headerPanel.size();
-        for (unsigned int var = 0; var < size; var++) {
-            delete headerPanel.at(headerPanel.size() - 1);
-            headerPanel.pop_back();
-        }
-
-        size = CardsDeck.size();
-        for (unsigned int var = 0; var < size; var++) {
-            delete CardsDeck.at(CardsDeck.size() - 1);
-            CardsDeck.pop_back();
-        }
-
-        size = CardsBoard.size();
-        for (unsigned int var = 0; var < size; var++) {
-            unsigned int tSize = CardsBoard.at(var)->size();
-            for (unsigned int x = 0; x < tSize; x++) {
-                delete CardsBoard.at(var)->popLast();
-            }
-        }
-
-        size = CardsBoard.size();
-        for (unsigned int var = 0; var < size; var++) {
-            delete CardsBoard.at(CardsBoard.size() - 1);
-            CardsBoard.pop_back();
+        for (unsigned int var = 0; var < game->getCoutDeskCols(); var++) {
+            removeButtons(var, 30);
         }
         delete game;
     }
     void createNewGame() {
         destroy();
         game = new Game(7);
-        initBoard();
+        for (unsigned int var = 0; var < game->getCoutDeskCols(); var++) {
+            createButtons(var);
+        }
         drawBoard();
     }
     void save() {
@@ -163,7 +134,10 @@ public:
         if (game->load(dialog.getOpenFileName().toStdString())) {
             destroy();
             this->game = game;
-            initBoard();
+            printGame(game);
+            for (unsigned int var = 0; var < game->getCoutDeskCols(); var++) {
+                createButtons(var);
+            }
             drawBoard();
             QMessageBox msgBox;
             msgBox.setText("Hra je nahrana");

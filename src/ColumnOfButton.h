@@ -13,7 +13,7 @@ public:
     }
     QPushButton *getByIndex(unsigned int index);
     QPushButton *getLast() {
-        return buttons.at(buttons.size() - 1);
+        return getByIndex(buttons.size() - 1);
     }
 
     unsigned int size() {
@@ -21,7 +21,7 @@ public:
     }
 
     QPushButton *popLast() {
-        QPushButton *button = buttons.at(buttons.size()-1);
+        QPushButton *button = getByIndex(buttons.size()-1);
         buttons.pop_back();
         return button;
     }
