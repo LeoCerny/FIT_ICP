@@ -15,7 +15,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    unsigned int defaultHeight = 600;
+    unsigned int defaultHeight = 500;
     unsigned int defaultWidth = 591;
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();

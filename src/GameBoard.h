@@ -164,7 +164,9 @@ private:
     unsigned int width;
     unsigned int height;
 
-    unsigned int marginDeskTop = 190;
+    unsigned int paddingTop = 60;
+    unsigned int marginCartTop = 17;
+    unsigned int marginDeskTop = 110;
 
     unsigned int click_col;
     unsigned int click_col2;

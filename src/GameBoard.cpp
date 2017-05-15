@@ -64,7 +64,7 @@ void GameBoard::initBoard()
         //Nataveni rozmeru tlacitka pro zacatek sloupce
         QPushButton* card = new QPushButton(window);
         card->setFixedSize(cardSize);
-        card->move(getX() + 10 + col * 83, getY() + this->marginDeskTop);
+        card->move(getX() + 10 + col * 83, getY() + paddingTop + marginDeskTop);
         card->setFlat(true);
         card->show();
 
@@ -78,7 +78,7 @@ void GameBoard::initBoard()
 
             //Nataveni rozmeru tlacitka
             card->setFixedSize(cardSize);
-            card->move(getX() + 10 + col * 83, this->marginDeskTop + y * 20 + getY());
+            card->move(getX() + 10 + col * 83, paddingTop + marginDeskTop + y * marginCartTop + getY());
             card->show();
 
             //mapovani tlacitka se signalem
@@ -98,7 +98,7 @@ void GameBoard::initBoard()
         //Nataveni rozmeru tlacitka
         QPushButton* card = new QPushButton(window);
         card->setFixedSize(cardSize);
-        card->move(getX() + 259 + x * 83, 70 + getY());
+        card->move(getX() + 259 + x * 83, paddingTop + getY());
         card->show();
 
         //mapovani tlacitka se signalem
@@ -115,7 +115,7 @@ void GameBoard::initBoard()
     cardLeft = new QPushButton(window);
     //Nataveni rozmeru tlacitka
     cardLeft->setFixedSize(cardSize);
-    cardLeft->move(getX()+10,70+getY());
+    cardLeft->move(getX()+10,paddingTop+getY());
     cardLeft->show();
 
     //mapovani tlacitka se signalem
@@ -127,7 +127,7 @@ void GameBoard::initBoard()
     cardRight = new QPushButton(window);
     //Nataveni rozmeru tlacitka
     cardRight->setFixedSize(cardSize);
-    cardRight->move(getX()+90,70+getY());
+    cardRight->move(getX()+90,paddingTop+getY());
     cardRight->show();
 
     //mapovani tlacitka se signalem
@@ -362,9 +362,9 @@ void GameBoard::createButtons(unsigned int col)
         //Nataveni rozmeru tlacitka
         button->setFixedSize(cardSize);
         if (CardsBoard.at(col)->size())
-            button->move(CardsBoard.at(col)->getLast()->pos().x(), CardsBoard.at(col)->getLast()->pos().y() + 20);
+            button->move(CardsBoard.at(col)->getLast()->pos().x(), CardsBoard.at(col)->getLast()->pos().y() + marginCartTop);
         else
-            button->move(getX() + 10 + col * 83, getY() + this->marginDeskTop);
+            button->move(getX() + 10 + col * 83, getY() + marginDeskTop+ paddingTop);
         button->show();
 
         //mapovani tlacitka se signalem
