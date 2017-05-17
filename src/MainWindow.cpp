@@ -51,10 +51,16 @@ void MainWindow::On_Clicked(int index) {
         msgBox.exec();
     } else if (col != 11) {
         board->click(col, index);
+        if (board->isFinished()) {
+            QMessageBox msgBox;
+            msgBox.setText("KONEC HRY");
+            msgBox.exec();
+        }
+        board->drawBoard();
     } else {
         board->rotate();
+        board->drawBoard();
     }
-    board->drawBoard();
 }
 
 void MainWindow::On_IconClicked(int index)
