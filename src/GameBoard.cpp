@@ -243,12 +243,6 @@ void GameBoard::drawBoard()
     } else {
         cardRight->setIcon(QIcon());
     }
-    if (game->isEnd()){
-        QMessageBox msgBox;
-        msgBox.setText("Gratulujeme, vyhrali jste!!");
-        msgBox.exec();
-
-    }
     cout << "OK";
 }
 
