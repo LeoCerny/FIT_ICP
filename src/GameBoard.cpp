@@ -2,6 +2,7 @@
 #include <QPainterPath>
 
 #include "GameBoard.h"
+#include "Game.h"
 
 void GameBoard::initBoard()
 {
@@ -242,7 +243,12 @@ void GameBoard::drawBoard()
     } else {
         cardRight->setIcon(QIcon());
     }
+    if (game->isEnd()){
+        QMessageBox msgBox;
+        msgBox.setText("Gratulujeme, vyhrali jste!!");
+        msgBox.exec();
 
+    }
     cout << "OK";
 }
 
