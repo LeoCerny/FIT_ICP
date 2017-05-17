@@ -53,7 +53,7 @@ void MainWindow::On_Clicked(int index) {
         board->click(col, index);
         if (board->isFinished()) {
             QMessageBox msgBox;
-            msgBox.setText("KONEC HRY");
+            msgBox.setText("Gratulujeme, vyhrali jste!!");
             msgBox.exec();
         }
         board->drawBoard();
