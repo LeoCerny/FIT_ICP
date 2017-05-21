@@ -51,12 +51,12 @@ void MainWindow::On_Clicked(int index) {
         msgBox.exec();
     } else if (col != 11) {
         board->click(col, index);
+        board->drawBoard();
         if (board->isFinished()) {
             QMessageBox msgBox;
             msgBox.setText("Gratulujeme, vyhrali jste!!");
             msgBox.exec();
         }
-        board->drawBoard();
     } else {
         board->rotate();
         board->drawBoard();
